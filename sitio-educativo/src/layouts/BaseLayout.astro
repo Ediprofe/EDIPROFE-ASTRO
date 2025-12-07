@@ -2,9 +2,58 @@
 interface Props {
   title: string;
   description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
-const { title, description = 'Sitio educativo con contenido pedagógico de calidad' } = Astro.props;
+const { 
+  title, 
+  description = 'Guía educativa para ciencias y matemáticas. Lecciones estructuradas con videos explicativos, material didáctico y recursos descargables.',
+  image = '/og-image.png',
+  type = 'website',
+  publishedTime,
+  modifiedTime
+} = Astro.props;
+
+const siteTitle = 'Ediprofe';
+const fullTitle = title === 'Inicio' ? siteTitle : `${title} | ${siteTitle}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://ediprofe.com');
+const ogImage = new URL(image, Astro.site || 'https://ediprofe.com');
+
+// Structured Data para SEO
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "Ediprofe",
+  "description": description,
+  "url": "https://ediprofe.com",
+  "logo": "https://ediprofe.com/logo.png",
+  "sameAs": [],
+  "teaches": [
+    {
+      "@type": "Course",
+      "name": "Matemáticas",
+      "description": "Lecciones de álgebra, geometría y más"
+    },
+    {
+      "@type": "Course", 
+      "name": "Física",
+      "description": "Conceptos fundamentales de física"
+    },
+    {
+      "@type": "Course",
+      "name": "Química",
+      "description": "Química general y aplicada"
+    },
+    {
+      "@type": "Course",
+      "name": "Ciencias Naturales",
+      "description": "Biología y ciencias de la naturaleza"
+    }
+  ]
+};
 ---
 
 <!DOCTYPE html>
@@ -12,19 +61,56 @@ const { title, description = 'Sitio educativo con contenido pedagógico de calid
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content={description}>
-  <title>{title} | Sitio Educativo</title>
   
-  <!-- KaTeX CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  <!-- SEO básico -->
+  <title>{fullTitle}</title>
+  <meta name="description" content={description}>
+  <meta name="author" content="Ediprofe">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href={canonicalURL}>
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content={type}>
+  <meta property="og:url" content={canonicalURL}>
+  <meta property="og:title" content={fullTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:image" content={ogImage}>
+  <meta property="og:site_name" content="Ediprofe">
+  <meta property="og:locale" content="es_ES">
+  {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+  {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content={canonicalURL}>
+  <meta name="twitter:title" content={fullTitle}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={ogImage}>
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   
   <!-- Preconnect para performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <link rel="dns-prefetch" href="https://www.youtube-nocookie.com">
+  
+  <!-- Fonts con display swap para mejor rendimiento -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
   
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  
+  <!-- Preload crítico -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 </head>
 <body>
   <slot />

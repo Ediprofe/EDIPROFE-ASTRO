@@ -8,7 +8,7 @@ import { getCollection } from 'astro:content';
 import { formatName } from '../../utils/navigation-generator.js';
 
 export async function getStaticPaths() {
-  const materias = ['matematicas', 'fisica', 'quimica'];
+  const materias = ['matematicas', 'fisica', 'quimica', 'ciencias'];
   return materias.map(materia => ({
     params: { materia },
     props: { materia }
@@ -32,9 +32,10 @@ try {
 const materiaName = formatName(materia);
 
 const materiaIcons: Record<string, string> = {
-  matematicas: '📐',
-  fisica: '⚛️',
-  quimica: '🧪',
+  matematicas: '🧮',
+  fisica: '🚀',
+  quimica: '⚛️',
+  ciencias: '🌍',
 };
 
 const icon = materiaIcons[materia] || '📚';
@@ -62,25 +63,41 @@ lessons.forEach(lesson => {
     
     <main class="main-content">
       <header class="page-header">
-        <a href="/" class="back-link">← Volver al inicio</a>
-        <div class="header-content">
-          <span class="header-icon">{icon}</span>
-          <h1>{materiaName}</h1>
+        <div class="header-top">
+          <a href="/" class="back-link">
+            <span class="back-arrow">←</span>
+            <span>Inicio</span>
+          </a>
         </div>
-        <p class="header-description">
-          {lessons.length} {lessons.length === 1 ? 'lección disponible' : 'lecciones disponibles'}
-        </p>
+        <div class="header-hero">
+          <div class="header-icon-wrapper">
+            <span class="header-icon">{icon}</span>
+          </div>
+          <div class="header-text">
+            <h1>{materiaName}</h1>
+            <p class="header-description">
+              <span class="lesson-count">{lessons.length}</span> {lessons.length === 1 ? 'lección disponible' : 'lecciones disponibles'}
+            </p>
+          </div>
+        </div>
       </header>
 
       {lessons.length > 0 ? (
         <div class="content-sections">
           {Object.entries(grouped).map(([unidad, bloques]) => (
             <section class="unidad-section">
-              <h2 class="unidad-title">{formatName(unidad)}</h2>
+              <div class="unidad-header">
+                <div class="unidad-badge">Unidad</div>
+                <h2 class="unidad-title">{formatName(unidad)}</h2>
+              </div>
               
               {Object.entries(bloques).map(([bloque, lecciones]) => (
                 <div class="bloque-group">
-                  <h3 class="bloque-title">{formatName(bloque)}</h3>
+                  <div class="bloque-header">
+                    <span class="bloque-indicator"></span>
+                    <h3 class="bloque-title">{formatName(bloque)}</h3>
+                    <span class="bloque-count">{lecciones.length} {lecciones.length === 1 ? 'lección' : 'lecciones'}</span>
+                  </div>
                   
                   <div class="lessons-grid">
                     {lecciones.map((lesson: any, index: number) => (
@@ -117,112 +134,231 @@ lessons.forEach(lesson => {
 <style>
   .page-container {
     display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-columns: 260px 1fr;
     min-height: 100vh;
+    background: var(--bg-primary);
   }
 
   .main-content {
-    padding: 2rem;
-    max-width: 1000px;
-    margin: 0 auto;
+    padding: 1.5rem 2rem;
     width: 100%;
   }
 
+  /* Header */
   .page-header {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1d4ed8 100%);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-top {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.25rem;
   }
 
   .back-link {
-    display: inline-block;
-    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: rgba(255,255,255,0.7);
     text-decoration: none;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.75rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    transition: all 0.2s;
   }
 
   .back-link:hover {
-    color: var(--color-primary);
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
   }
 
-  .header-content {
+  .back-arrow {
+    font-size: 0.875rem;
+  }
+
+  .header-hero {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
+    gap: 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
   }
 
   .header-icon {
-    font-size: 3rem;
+    font-size: 2.25rem;
   }
 
-  .header-content h1 {
-    font-size: 2.5rem;
-    color: var(--text-primary);
-    margin: 0;
+  .header-text h1 {
+    font-size: 1.75rem;
+    color: white;
+    margin: 0 0 0.375rem 0;
+    font-weight: 700;
   }
 
   .header-description {
-    color: var(--text-secondary);
-    font-size: 1.125rem;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9375rem;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
+  .lesson-count {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  /* Content sections */
   .content-sections {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 1.5rem;
   }
 
   .unidad-section {
     background: var(--bg-secondary);
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid var(--border-color, #e2e8f0);
+  }
+
+  :global(html.dark) .unidad-section {
+    border-color: #334155;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .unidad-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .unidad-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(37, 99, 235, 0.1);
+    padding: 0.25rem 0.625rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
   }
 
   .unidad-title {
-    font-size: 1.5rem;
-    color: var(--color-primary);
-    margin: 0 0 1.5rem 0;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--color-accent);
+    font-size: 1.375rem;
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 700;
   }
 
   .bloque-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+  }
+
+  :global(html.dark) .bloque-group {
+    border-bottom-color: #334155;
   }
 
   .bloque-group:last-child {
     margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .bloque-header {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+  }
+
+  .bloque-indicator {
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(180deg, #2563eb, #3b82f6);
+    border-radius: 2px;
   }
 
   .bloque-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .bloque-count {
+    font-size: 0.75rem;
     color: var(--text-secondary);
-    margin: 0 0 1rem 0;
+    background: var(--bg-primary);
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
   }
 
   .lessons-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
+    gap: 0.875rem;
   }
 
+  /* Empty state */
   .empty-state {
     text-align: center;
     padding: 4rem 2rem;
     background: var(--bg-secondary);
-    border-radius: 12px;
-    border: 2px dashed #e2e8f0;
+    border-radius: 16px;
+    border: 2px dashed var(--border-color, #e2e8f0);
+  }
+
+  :global(html.dark) .empty-state {
+    border-color: #334155;
   }
 
   .empty-icon {
-    font-size: 4rem;
+    font-size: 3.5rem;
     margin-bottom: 1rem;
   }
 
   .empty-state h2 {
-    font-size: 1.5rem;
+    font-size: 1.375rem;
     color: var(--text-primary);
     margin: 0 0 0.5rem 0;
   }
@@ -233,33 +369,67 @@ lessons.forEach(lesson => {
   }
 
   .empty-hint code {
-    background: #e2e8f0;
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-size: 0.875em;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-primary);
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    font-size: 0.8125em;
   }
 
+  /* Responsive */
   @media (max-width: 1024px) {
     .page-container {
       grid-template-columns: 1fr;
+    }
+
+    .main-content {
+      padding: 4rem 1.25rem 1.25rem;
     }
   }
 
   @media (max-width: 768px) {
     .main-content {
-      padding: 1rem;
+      padding: 4rem 1rem 1rem;
     }
 
-    .header-content h1 {
-      font-size: 1.75rem;
+    .page-header {
+      padding: 1.25rem;
+      border-radius: 12px;
+    }
+
+    .header-hero {
+      gap: 1rem;
+    }
+
+    .header-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
     }
 
     .header-icon {
-      font-size: 2rem;
+      font-size: 1.75rem;
+    }
+
+    .header-text h1 {
+      font-size: 1.375rem;
+    }
+
+    .header-description {
+      font-size: 0.8125rem;
     }
 
     .unidad-section {
-      padding: 1.5rem;
+      padding: 1.25rem;
+      border-radius: 12px;
+    }
+
+    .unidad-title {
+      font-size: 1.125rem;
+    }
+
+    .lessons-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>

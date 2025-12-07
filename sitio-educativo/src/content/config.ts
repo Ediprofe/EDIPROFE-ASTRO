@@ -22,8 +22,14 @@ const quimicaCollection = defineCollection({
   schema: lessonsSchema,
 });
 
+const cienciasCollection = defineCollection({
+  type: 'content',
+  schema: lessonsSchema,
+});
+
 export const collections = {
   'matematicas': matematicasCollection,
   'fisica': fisicaCollection,
   'quimica': quimicaCollection,
+  'ciencias': cienciasCollection,
 };

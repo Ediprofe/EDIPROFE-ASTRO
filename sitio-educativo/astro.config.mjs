@@ -6,8 +6,16 @@ import rehypeKatex from 'rehype-katex';
 import { youtubeAutoEmbed } from './src/plugins/youtube-auto-embed.js';
 
 export default defineConfig({
-  site: 'https://tu-sitio-educativo.com',
-  integrations: [mdx(), sitemap()],
+  site: 'https://ediprofe.com',
+  integrations: [
+    mdx(),
+    sitemap({
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+    })
+  ],
+  compressHTML: true,
   markdown: {
     remarkPlugins: [
       // CRÍTICO: math PRIMERO para máxima compatibilidad
