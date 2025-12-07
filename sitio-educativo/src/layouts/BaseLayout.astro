@@ -30,7 +30,10 @@ const structuredData = {
   "description": description,
   "url": "https://ediprofe.com",
   "logo": "https://ediprofe.com/logo.png",
-  "sameAs": [],
+  "sameAs": [
+    "https://www.youtube.com/@profeedi",
+    "https://www.tiktok.com/@ediprofe"
+  ],
   "teaches": [
     {
       "@type": "Course",
@@ -65,8 +68,10 @@ const structuredData = {
   <!-- SEO básico -->
   <title>{fullTitle}</title>
   <meta name="description" content={description}>
+  <meta name="keywords" content="matemáticas, física, química, ciencias, educación, lecciones, ejercicios, aprendizaje, estudiantes, bachillerato, universidad, tutoriales">
   <meta name="author" content="Ediprofe">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
   <link rel="canonical" href={canonicalURL}>
   
   <!-- Open Graph / Facebook -->
