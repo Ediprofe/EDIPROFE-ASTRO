@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
+import remarkBreaks from 'remark-breaks';
 import rehypeKatex from 'rehype-katex';
 import rehypeExternalLinks from 'rehype-external-links';
 import { youtubeAutoEmbed } from './src/plugins/youtube-auto-embed.js';
@@ -23,6 +24,7 @@ export default defineConfig({
       [remarkMath, {
         singleDollarTextMath: true
       }],
+      remarkBreaks,
       youtubeAutoEmbed
     ],
     rehypePlugins: [
