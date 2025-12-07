@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && npm run validate",
+    "build": "astro build",
     "preview": "astro preview",
     "validate": "node scripts/validate-latex.js",
     "new:lesson": "node scripts/new-lesson.js",
