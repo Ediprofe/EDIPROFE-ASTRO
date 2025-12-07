@@ -181,9 +181,9 @@ declare module 'astro:content' {
   collection: "fisica";
   data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
-"01-introduccion-a-la-fisica/01-introduccion/03-medicion-y-cantidades-fisicas.md.md": {
-	id: "01-introduccion-a-la-fisica/01-introduccion/03-medicion-y-cantidades-fisicas.md.md";
-  slug: "01-introduccion-a-la-fisica/01-introduccion/03-medicion-y-cantidades-fisicasmd";
+"01-introduccion-a-la-fisica/01-introduccion/03-medicion-y-cantidades-fisicas.md": {
+	id: "01-introduccion-a-la-fisica/01-introduccion/03-medicion-y-cantidades-fisicas.md";
+  slug: "01-introduccion-a-la-fisica/01-introduccion/03-medicion-y-cantidades-fisicas";
   body: string;
   collection: "fisica";
   data: InferEntrySchema<"fisica">
@@ -279,9 +279,9 @@ declare module 'astro:content' {
   collection: "fisica";
   data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
-"01-introduccion-a-la-fisica/04-vectores/03-representacion-de-vectores-en-el-plano.md.md": {
-	id: "01-introduccion-a-la-fisica/04-vectores/03-representacion-de-vectores-en-el-plano.md.md";
-  slug: "01-introduccion-a-la-fisica/04-vectores/03-representacion-de-vectores-en-el-planomd";
+"01-introduccion-a-la-fisica/04-vectores/03-representacion-de-vectores-en-el-plano.md": {
+	id: "01-introduccion-a-la-fisica/04-vectores/03-representacion-de-vectores-en-el-plano.md";
+  slug: "01-introduccion-a-la-fisica/04-vectores/03-representacion-de-vectores-en-el-plano";
   body: string;
   collection: "fisica";
   data: InferEntrySchema<"fisica">
@@ -451,9 +451,9 @@ declare module 'astro:content' {
   collection: "quimica";
   data: InferEntrySchema<"quimica">
 } & { render(): Render[".md"] };
-"01-la-materia/04-tipos/01-sustancias-puras-y-mezclas.md.md": {
-	id: "01-la-materia/04-tipos/01-sustancias-puras-y-mezclas.md.md";
-  slug: "01-la-materia/04-tipos/01-sustancias-puras-y-mezclasmd";
+"01-la-materia/04-tipos/02-sustancias-puras-y-mezclas.md": {
+	id: "01-la-materia/04-tipos/02-sustancias-puras-y-mezclas.md";
+  slug: "01-la-materia/04-tipos/02-sustancias-puras-y-mezclas";
   body: string;
   collection: "quimica";
   data: InferEntrySchema<"quimica">
