@@ -1,0 +1,227 @@
+---
+import { getCollection } from 'astro:content';
+import { buildNavigationFromLessonsWithCollection, mergeNavigations, formatName } from '../../utils/navigation-generator.js';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+// Obtener navegación de cada colección
+let navigation: any = {};
+
+try {
+  const matematicas = await getCollection('matematicas');
+  const navMat = buildNavigationFromLessonsWithCollection(matematicas, 'matematicas');
+  navigation = mergeNavigations(navigation, navMat);
+} catch (e) {}
+
+try {
+  const fisica = await getCollection('fisica');
+  const navFis = buildNavigationFromLessonsWithCollection(fisica, 'fisica');
+  navigation = mergeNavigations(navigation, navFis);
+} catch (e) {}
+
+try {
+  const quimica = await getCollection('quimica');
+  const navQui = buildNavigationFromLessonsWithCollection(quimica, 'quimica');
+  navigation = mergeNavigations(navigation, navQui);
+} catch (e) {}
+---
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a href="/" class="logo">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">EduSite</span>
+    </a>
+  </div>
+  
+  <nav class="sidebar-nav">
+    {Object.entries(navigation).map(([materiaKey, materia]: [string, any]) => (
+      <div class="nav-section">
+        <h3 class="nav-section-title">
+          <span class="section-icon">📖</span>
+          {materia.name}
+        </h3>
+        
+        {Object.entries(materia.unidades).map(([unidadKey, unidad]: [string, any]) => (
+          <div class="nav-unidad">
+            <h4 class="nav-unidad-title">{unidad.name}</h4>
+            
+            {Object.entries(unidad.bloques).map(([bloqueKey, bloque]: [string, any]) => (
+              <div class="nav-bloque">
+                <h5 class="nav-bloque-title">{bloque.name}</h5>
+                
+                <ul class="nav-lessons">
+                  {bloque.lecciones.map((leccion: any) => (
+                    <li>
+                      <a 
+                        href={`/${leccion.slug}`}
+                        class:list={['nav-lesson-link', { active: currentPath.includes(leccion.slug) }]}
+                      >
+                        {leccion.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    ))}
+    
+    {Object.keys(navigation).length === 0 && (
+      <div class="nav-empty">
+        <p>No hay contenido disponible aún.</p>
+        <p>Agrega archivos .md en <code>src/content/</code></p>
+      </div>
+    )}
+  </nav>
+</aside>
+
+<style>
+  .sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-secondary);
+    border-right: 1px solid #e2e8f0;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+
+  .logo-icon {
+    font-size: 1.5rem;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .nav-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .nav-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  .section-icon {
+    font-size: 1rem;
+  }
+
+  .nav-unidad {
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .nav-unidad-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-bloque {
+    margin-left: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .nav-bloque-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+  }
+
+  .nav-lessons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-left: 0.5rem;
+  }
+
+  .nav-lessons li {
+    margin-bottom: 0.25rem;
+  }
+
+  .nav-lesson-link {
+    display: block;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-lesson-link:hover {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .nav-lesson-link.active {
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--color-primary);
+    font-weight: 500;
+    border-left-color: var(--color-primary);
+  }
+
+  .nav-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-secondary);
+  }
+
+  .nav-empty code {
+    background: #f1f5f9;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+
+  /* Ocultar en móvil */
+  @media (max-width: 1024px) {
+    .sidebar {
+      display: none;
+    }
+  }
+</style>

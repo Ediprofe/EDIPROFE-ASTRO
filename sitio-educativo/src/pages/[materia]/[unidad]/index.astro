@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LessonCard from '../../../components/Content/LessonCard.astro';
+import ThemeToggle from '../../../components/UI/ThemeToggle.astro';
+import MobileMenu from '../../../components/Navigation/MobileMenu.astro';
+import CollapsibleSidebar from '../../../components/Navigation/CollapsibleSidebar.astro';
+import { getCollection } from 'astro:content';
+import { formatName, formatBlockName } from '../../../utils/navigation-generator.js';
+
+export async function getStaticPaths() {
+  const paths: any[] = [];
+  const materias = ['matematicas', 'fisica', 'quimica'];
+  
+  for (const materia of materias) {
+    try {
+      const lessons = await getCollection(materia as any);
+      const unidades = new Set<string>();
+      
+      lessons.forEach(lesson => {
+        const parts = lesson.slug.split('/');
+        if (parts[0]) {
+          unidades.add(parts[0]);
+        }
+      });
+      
+      unidades.forEach(unidad => {
+        paths.push({
+          params: { materia, unidad },
+          props: { materia, unidad }
+        });
+      });
+    } catch (e) {}
+  }
+  
+  return paths;
+}
+
+interface Props {
+  materia: string;
+  unidad: string;
+}
+
+const { materia, unidad } = Astro.props;
+const currentPath = `/${materia}/${unidad}`;
+
+// Obtener lecciones de esta unidad
+let lessons: any[] = [];
+try {
+  const allLessons = await getCollection(materia as any);
+  lessons = allLessons.filter(lesson => lesson.slug.startsWith(`${unidad}/`));
+} catch (e) {}
+
+const materiaName = formatName(materia);
+const unidadName = formatName(unidad);
+
+const materiaIcons: Record<string, string> = {
+  matematicas: '📐',
+  fisica: '⚛️',
+  quimica: '🧪',
+};
+
+const icon = materiaIcons[materia] || '📚';
+
+// Agrupar por bloque
+const grouped: Record<string, any[]> = {};
+
+lessons.forEach(lesson => {
+  const parts = lesson.slug.split('/');
+  const bloque = parts[1] || 'general';
+  
+  if (!grouped[bloque]) grouped[bloque] = [];
+  grouped[bloque].push(lesson);
+});
+
+// Ordenar bloques
+const sortedBloques = Object.keys(grouped).sort();
+---
+
+<BaseLayout title={`${unidadName} - ${materiaName}`}>
+  <MobileMenu currentPath={currentPath} />
+  
+  <div class="page-container">
+    <CollapsibleSidebar currentPath={currentPath} />
+    
+    <main class="main-content">
+      <header class="page-header">
+        <nav class="breadcrumb">
+          <a href="/">Inicio</a>
+          <span class="separator">›</span>
+          <a href={`/${materia}`}>{materiaName}</a>
+          <span class="separator">›</span>
+          <span class="current">{unidadName}</span>
+        </nav>
+        
+        <div class="header-content">
+          <span class="header-icon">{icon}</span>
+          <div>
+            <p class="header-materia">{materiaName}</p>
+            <h1>{unidadName}</h1>
+          </div>
+        </div>
+        <p class="header-description">
+          {lessons.length} {lessons.length === 1 ? 'lección disponible' : 'lecciones disponibles'}
+        </p>
+      </header>
+
+      {lessons.length > 0 ? (
+        <div class="content-sections">
+          {sortedBloques.map(bloque => (
+            <section class="bloque-section">
+              <h2 class="bloque-title">{formatBlockName(bloque)}</h2>
+              
+              <div class="lessons-grid">
+                {grouped[bloque].sort((a, b) => a.slug.localeCompare(b.slug)).map((lesson: any, index: number) => (
+                  <LessonCard
+                    title={lesson.data?.title || 'Sin título'}
+                    description={lesson.data?.description}
+                    href={`/${materia}/${lesson.slug}`}
+                    materia={materia}
+                    order={index + 1}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h2>Sin contenido aún</h2>
+          <p>No hay lecciones disponibles en esta unidad.</p>
+        </div>
+      )}
+    </main>
+  </div>
+  
+  <ThemeToggle />
+</BaseLayout>
+
+<style>
+  .page-container {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
+  }
+
+  .main-content {
+    padding: 2rem 3rem;
+    width: 100%;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .breadcrumb a {
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-primary);
+  }
+
+  .breadcrumb .separator {
+    color: var(--text-secondary);
+  }
+
+  .breadcrumb .current {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-icon {
+    font-size: 3rem;
+  }
+
+  .header-materia {
+    font-size: 0.875rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .header-content h1 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .header-description {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .content-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .bloque-section {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  :global(html.dark) .bloque-section {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .bloque-title {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  .lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 2px dashed var(--border-color, #e2e8f0);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-state p {
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .page-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 1rem;
+    }
+
+    .header-content h1 {
+      font-size: 1.5rem;
+    }
+
+    .header-icon {
+      font-size: 2rem;
+    }
+
+    .bloque-section {
+      padding: 1.5rem;
+    }
+  }
+</style>

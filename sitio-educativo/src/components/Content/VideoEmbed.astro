@@ -1,0 +1,81 @@
+---
+interface Props {
+  url: string;
+  title?: string;
+}
+
+const { url, title = 'Video educativo' } = Astro.props;
+
+// Extraer ID del video de YouTube
+function getYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+const videoId = getYouTubeId(url);
+---
+
+{videoId ? (
+  <div class="video-container">
+    <iframe 
+      src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+      title={title}
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      loading="lazy"
+    ></iframe>
+  </div>
+) : (
+  <div class="video-error">
+    <p>⚠️ URL de video no válida</p>
+    <code>{url}</code>
+  </div>
+)}
+
+<style>
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin: 2rem 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .video-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .video-error p {
+    color: #dc2626;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .video-error code {
+    font-size: 0.85rem;
+    color: #666;
+  }
+</style>

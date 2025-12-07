@@ -1,0 +1,166 @@
+/* Estilos responsivos adicionales */
+
+/* Breakpoints:
+   - sm: 640px
+   - md: 768px
+   - lg: 1024px
+   - xl: 1280px
+*/
+
+/* Mobile first - estilos base para móvil */
+
+/* Tablets */
+@media (min-width: 640px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+}
+
+/* Tablets grandes / Laptops pequeñas */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* Laptops */
+@media (min-width: 1024px) {
+  /* Mostrar sidebar */
+  .sidebar {
+    display: flex;
+  }
+  
+  /* Ocultar menú móvil */
+  .mobile-menu-container {
+    display: none;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero {
+    padding: 2rem 1rem;
+  }
+  
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  
+  .hero-icon {
+    font-size: 2rem;
+  }
+}
+
+/* Preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary: #0000ff;
+    --color-secondary: #0000cc;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f0f0;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  .lesson-card,
+  .materia-card {
+    border-width: 2px;
+  }
+}
+
+/* Impresión */
+@media print {
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  
+  .hero {
+    background: none;
+    color: black;
+    padding: 1rem 0;
+    border-bottom: 2px solid black;
+  }
+  
+  .hero-title {
+    font-size: 24pt;
+  }
+  
+  a {
+    color: black;
+    text-decoration: underline;
+  }
+  
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666;
+  }
+  
+  .content-article {
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+  
+  .katex-display {
+    page-break-inside: avoid;
+  }
+  
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+  
+  img, table {
+    page-break-inside: avoid;
+  }
+}
+
+/* Touch devices */
+@media (hover: none) and (pointer: coarse) {
+  /* Aumentar área táctil */
+  .nav-lesson-link,
+  .toc-link,
+  .breadcrumb-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Remover efectos hover que no funcionan bien en touch */
+  .lesson-card:hover,
+  .materia-card:hover {
+    transform: none;
+  }
+  
+  /* Añadir estado activo */
+  .lesson-card:active,
+  .materia-card:active {
+    transform: scale(0.98);
+  }
+}

@@ -1,0 +1,113 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  href: string;
+  materia?: string;
+  order?: number;
+}
+
+const { title, description, href, materia, order } = Astro.props;
+
+const materiaIcons: Record<string, string> = {
+  matematicas: '📐',
+  fisica: '⚛️',
+  quimica: '🧪',
+  default: '📚'
+};
+
+const icon = materia ? (materiaIcons[materia] || materiaIcons.default) : materiaIcons.default;
+---
+
+<a href={href} class="lesson-card">
+  <div class="card-icon">{icon}</div>
+  <div class="card-content">
+    {order && <span class="card-order">Lección {order}</span>}
+    <h3 class="card-title">{title}</h3>
+    {description && <p class="card-description">{description}</p>}
+  </div>
+  <div class="card-arrow">→</div>
+</a>
+
+<style>
+  .lesson-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--bg-secondary);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+  }
+
+  .lesson-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .card-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .card-order {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-primary);
+  }
+
+  .card-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+    line-height: 1.5;
+  }
+
+  .card-arrow {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s;
+  }
+
+  .lesson-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (max-width: 640px) {
+    .lesson-card {
+      padding: 1rem;
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+    }
+  }
+</style>

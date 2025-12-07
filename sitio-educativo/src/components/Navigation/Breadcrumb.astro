@@ -1,0 +1,120 @@
+---
+import { formatName, formatBlockName } from '../../utils/navigation-generator.js';
+
+interface Props {
+  materia: string;
+  unidad: string;
+  bloque: string;
+}
+
+const { materia, unidad, bloque } = Astro.props;
+---
+
+<nav class="breadcrumb" aria-label="Navegación de migas de pan">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a href="/" class="breadcrumb-link">
+        <span class="breadcrumb-icon">🏠</span>
+        Inicio
+      </a>
+    </li>
+    
+    {materia && (
+      <li class="breadcrumb-item">
+        <span class="breadcrumb-separator">›</span>
+        <a href={`/${materia}`} class="breadcrumb-link">
+          {formatName(materia)}
+        </a>
+      </li>
+    )}
+    
+    {unidad && (
+      <li class="breadcrumb-item">
+        <span class="breadcrumb-separator">›</span>
+        <a href={`/${materia}/${unidad}`} class="breadcrumb-link">
+          {formatName(unidad)}
+        </a>
+      </li>
+    )}
+    
+    {bloque && (
+      <li class="breadcrumb-item">
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-current">
+          {formatBlockName(bloque)}
+        </span>
+      </li>
+    )}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb {
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.25rem;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .breadcrumb-link:hover {
+    background: rgba(37, 99, 235, 0.1);
+    text-decoration: none;
+  }
+
+  .breadcrumb-icon {
+    font-size: 1rem;
+  }
+
+  .breadcrumb-separator {
+    color: var(--text-secondary);
+    margin: 0 0.25rem;
+    font-weight: 300;
+  }
+
+  .breadcrumb-current {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    .breadcrumb {
+      padding: 0.5rem 0.75rem;
+    }
+
+    .breadcrumb-item {
+      font-size: 0.75rem;
+    }
+
+    .breadcrumb-link {
+      padding: 0.2rem 0.35rem;
+    }
+  }
+</style>

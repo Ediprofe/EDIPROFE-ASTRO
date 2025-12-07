@@ -1,0 +1,265 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LessonCard from '../../components/Content/LessonCard.astro';
+import ThemeToggle from '../../components/UI/ThemeToggle.astro';
+import MobileMenu from '../../components/Navigation/MobileMenu.astro';
+import CollapsibleSidebar from '../../components/Navigation/CollapsibleSidebar.astro';
+import { getCollection } from 'astro:content';
+import { formatName } from '../../utils/navigation-generator.js';
+
+export async function getStaticPaths() {
+  const materias = ['matematicas', 'fisica', 'quimica'];
+  return materias.map(materia => ({
+    params: { materia },
+    props: { materia }
+  }));
+}
+
+interface Props {
+  materia: string;
+}
+
+const { materia } = Astro.props;
+
+// Obtener lecciones de esta materia
+let lessons: any[] = [];
+try {
+  lessons = await getCollection(materia as any);
+} catch (e) {
+  // Colección vacía o no existe
+}
+
+const materiaName = formatName(materia);
+
+const materiaIcons: Record<string, string> = {
+  matematicas: '📐',
+  fisica: '⚛️',
+  quimica: '🧪',
+};
+
+const icon = materiaIcons[materia] || '📚';
+
+// Agrupar por unidad y bloque
+const grouped: Record<string, Record<string, any[]>> = {};
+
+lessons.forEach(lesson => {
+  const parts = lesson.slug.split('/');
+  const unidad = parts[0] || 'general';
+  const bloque = parts[1] || 'general';
+  
+  if (!grouped[unidad]) grouped[unidad] = {};
+  if (!grouped[unidad][bloque]) grouped[unidad][bloque] = [];
+  
+  grouped[unidad][bloque].push(lesson);
+});
+---
+
+<BaseLayout title={materiaName}>
+  <MobileMenu currentPath={`/${materia}`} />
+  
+  <div class="page-container">
+    <CollapsibleSidebar currentPath={`/${materia}`} />
+    
+    <main class="main-content">
+      <header class="page-header">
+        <a href="/" class="back-link">← Volver al inicio</a>
+        <div class="header-content">
+          <span class="header-icon">{icon}</span>
+          <h1>{materiaName}</h1>
+        </div>
+        <p class="header-description">
+          {lessons.length} {lessons.length === 1 ? 'lección disponible' : 'lecciones disponibles'}
+        </p>
+      </header>
+
+      {lessons.length > 0 ? (
+        <div class="content-sections">
+          {Object.entries(grouped).map(([unidad, bloques]) => (
+            <section class="unidad-section">
+              <h2 class="unidad-title">{formatName(unidad)}</h2>
+              
+              {Object.entries(bloques).map(([bloque, lecciones]) => (
+                <div class="bloque-group">
+                  <h3 class="bloque-title">{formatName(bloque)}</h3>
+                  
+                  <div class="lessons-grid">
+                    {lecciones.map((lesson: any, index: number) => (
+                      <LessonCard
+                        title={lesson.data?.title || 'Sin título'}
+                        description={lesson.data?.description}
+                        href={`/${materia}/${lesson.slug}`}
+                        materia={materia}
+                        order={index + 1}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h2>Sin contenido aún</h2>
+          <p>No hay lecciones disponibles en {materiaName}.</p>
+          <p class="empty-hint">
+            Agrega archivos .md en <code>src/content/{materia}/</code>
+          </p>
+        </div>
+      )}
+    </main>
+  </div>
+  
+  <ThemeToggle />
+</BaseLayout>
+
+<style>
+  .page-container {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
+  }
+
+  .main-content {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .back-link:hover {
+    color: var(--color-primary);
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-icon {
+    font-size: 3rem;
+  }
+
+  .header-content h1 {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .header-description {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin: 0;
+  }
+
+  .content-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .unidad-section {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .unidad-title {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  .bloque-group {
+    margin-bottom: 2rem;
+  }
+
+  .bloque-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .bloque-title {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+  }
+
+  .lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 2px dashed #e2e8f0;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-state p {
+    color: var(--text-secondary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-hint code {
+    background: #e2e8f0;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.875em;
+  }
+
+  @media (max-width: 1024px) {
+    .page-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 1rem;
+    }
+
+    .header-content h1 {
+      font-size: 1.75rem;
+    }
+
+    .header-icon {
+      font-size: 2rem;
+    }
+
+    .unidad-section {
+      padding: 1.5rem;
+    }
+  }
+</style>

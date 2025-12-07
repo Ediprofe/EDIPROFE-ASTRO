@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import LessonLayout from '../layouts/LessonLayout.astro';
+
+export async function getStaticPaths() {
+  // Obtener todas las lecciones de todas las colecciones
+  const allLessons: Array<{ lesson: any; materia: string; fullSlug: string }> = [];
+  
+  // Función helper para agregar lecciones con su materia
+  const addLessons = (lessons: any[], materiaName: string) => {
+    lessons.forEach(lesson => {
+      const fullSlug = `${materiaName}/${lesson.slug}`;
+      allLessons.push({ lesson, materia: materiaName, fullSlug });
+    });
+  };
+  
+  try {
+    const matematicas = await getCollection('matematicas');
+    addLessons(matematicas, 'matematicas');
+  } catch (e) {}
+  
+  try {
+    const fisica = await getCollection('fisica');
+    addLessons(fisica, 'fisica');
+  } catch (e) {}
+  
+  try {
+    const quimica = await getCollection('quimica');
+    addLessons(quimica, 'quimica');
+  } catch (e) {}
+  
+  // Ordenar lecciones por slug para navegación secuencial
+  allLessons.sort((a, b) => a.fullSlug.localeCompare(b.fullSlug));
+  
+  // Crear paths con información de navegación prev/next
+  return allLessons.map((item, index) => {
+    const parts = item.lesson.slug.split('/');
+    const prevLesson = index > 0 ? allLessons[index - 1] : null;
+    const nextLesson = index < allLessons.length - 1 ? allLessons[index + 1] : null;
+    
+    return {
+      params: { 
+        slug: item.fullSlug 
+      },
+      props: { 
+        lesson: item.lesson,
+        materia: item.materia,
+        unidad: parts[0] || '',
+        bloque: parts[1] || '',
+        archivo: parts[2] || '',
+        prevLesson: prevLesson ? {
+          slug: prevLesson.fullSlug,
+          title: prevLesson.lesson.data?.title || 'Lección anterior'
+        } : null,
+        nextLesson: nextLesson ? {
+          slug: nextLesson.fullSlug,
+          title: nextLesson.lesson.data?.title || 'Siguiente lección'
+        } : null
+      }
+    };
+  });
+}
+
+interface Props {
+  lesson: any;
+  materia: string;
+  unidad: string;
+  bloque: string;
+  archivo: string;
+  prevLesson: { slug: string; title: string } | null;
+  nextLesson: { slug: string; title: string } | null;
+}
+
+const { lesson, prevLesson, nextLesson } = Astro.props;
+const { Content, headings } = await lesson.render();
+---
+
+<LessonLayout 
+  frontmatter={lesson.data} 
+  headings={headings} 
+  url={Astro.url.pathname}
+  prevLesson={prevLesson}
+  nextLesson={nextLesson}
+>
+  <Content />
+</LessonLayout>

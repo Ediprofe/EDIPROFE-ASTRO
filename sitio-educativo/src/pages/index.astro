@@ -1,0 +1,375 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LessonCard from '../components/Content/LessonCard.astro';
+import ThemeToggle from '../components/UI/ThemeToggle.astro';
+import { getCollection } from 'astro:content';
+import { buildNavigationFromLessonsWithCollection, mergeNavigations } from '../utils/navigation-generator.js';
+
+// Obtener navegación de cada colección
+let navigation: any = {};
+let allLessonsWithMateria: any[] = [];
+
+try {
+  const matematicas = await getCollection('matematicas');
+  const navMat = buildNavigationFromLessonsWithCollection(matematicas, 'matematicas');
+  navigation = mergeNavigations(navigation, navMat);
+  matematicas.forEach(l => allLessonsWithMateria.push({ ...l, materia: 'matematicas' }));
+} catch (e) {}
+
+try {
+  const fisica = await getCollection('fisica');
+  const navFis = buildNavigationFromLessonsWithCollection(fisica, 'fisica');
+  navigation = mergeNavigations(navigation, navFis);
+  fisica.forEach(l => allLessonsWithMateria.push({ ...l, materia: 'fisica' }));
+} catch (e) {}
+
+try {
+  const quimica = await getCollection('quimica');
+  const navQui = buildNavigationFromLessonsWithCollection(quimica, 'quimica');
+  navigation = mergeNavigations(navigation, navQui);
+  quimica.forEach(l => allLessonsWithMateria.push({ ...l, materia: 'quimica' }));
+} catch (e) {}
+
+// Obtener materias disponibles
+const materias = Object.entries(navigation).map(([key, value]: [string, any]) => ({
+  slug: key,
+  name: value.name,
+  lessonCount: Object.values(value.unidades).reduce((acc: number, unidad: any) => {
+    return acc + Object.values(unidad.bloques).reduce((acc2: number, bloque: any) => {
+      return acc2 + bloque.lecciones.length;
+    }, 0);
+  }, 0)
+}));
+
+const materiaIcons: Record<string, string> = {
+  matematicas: '📐',
+  fisica: '⚛️',
+  quimica: '🧪',
+};
+---
+
+<BaseLayout title="Inicio">
+  <div class="home-container">
+    <header class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="hero-icon">📚</span>
+          Sitio Educativo
+        </h1>
+        <p class="hero-subtitle">
+          Contenido pedagógico de calidad con fórmulas matemáticas y videos explicativos
+        </p>
+      </div>
+    </header>
+
+    <main class="main-content">
+      {materias.length > 0 ? (
+        <section class="materias-section">
+          <h2 class="section-title">Materias Disponibles</h2>
+          
+          <div class="materias-grid">
+            {materias.map(materia => (
+              <a href={`/${materia.slug}`} class="materia-card">
+                <div class="materia-icon">
+                  {materiaIcons[materia.slug] || '📖'}
+                </div>
+                <div class="materia-info">
+                  <h3 class="materia-name">{materia.name}</h3>
+                  <p class="materia-count">{materia.lessonCount} lecciones</p>
+                </div>
+                <span class="materia-arrow">→</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h2>¡Bienvenido!</h2>
+          <p>Aún no hay contenido disponible.</p>
+          <div class="empty-instructions">
+            <h3>Para comenzar:</h3>
+            <ol>
+              <li>Crea carpetas en <code>src/content/</code> siguiendo la estructura:
+                <pre>matematicas/algebra/bloque-01-fundamentos/01-introduccion.md</pre>
+              </li>
+              <li>Escribe tu contenido en Markdown con fórmulas LaTeX</li>
+              <li>Ejecuta <code>npm run dev</code> para ver los cambios</li>
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {materias.length > 0 && (
+        <section class="recent-section">
+          <h2 class="section-title">Lecciones Recientes</h2>
+          <div class="lessons-grid">
+            {allLessonsWithMateria.slice(0, 6).map((lesson: any) => {
+              return (
+                <LessonCard 
+                  title={lesson.data?.title || 'Sin título'}
+                  description={lesson.data?.description}
+                  href={`/${lesson.materia}/${lesson.slug}`}
+                  materia={lesson.materia}
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
+    </main>
+
+    <footer class="footer">
+      <p>Sitio Educativo - Contenido pedagógico de calidad</p>
+    </footer>
+  </div>
+  
+  <ThemeToggle />
+</BaseLayout>
+
+<style>
+  .home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .hero-icon {
+    font-size: 3.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .main-content {
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid var(--color-accent);
+  }
+
+  .materias-section {
+    margin-bottom: 4rem;
+  }
+
+  .materias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .materia-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+  }
+
+  .materia-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
+    transform: translateY(-4px);
+    text-decoration: none;
+  }
+
+  .materia-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+  }
+
+  .materia-info {
+    flex: 1;
+  }
+
+  .materia-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .materia-count {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .materia-arrow {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s;
+  }
+
+  .materia-card:hover .materia-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 2px dashed #e2e8f0;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-state > p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin: 0 0 2rem 0;
+  }
+
+  .empty-instructions {
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .empty-instructions h3 {
+    font-size: 1rem;
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+  }
+
+  .empty-instructions ol {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .empty-instructions li {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+  }
+
+  .empty-instructions code {
+    background: #e2e8f0;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.875em;
+  }
+
+  .empty-instructions pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    overflow-x: auto;
+    margin-top: 0.5rem;
+  }
+
+  .footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid #e2e8f0;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  .footer p {
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 3rem 1.5rem;
+    }
+
+    .hero-title {
+      font-size: 2rem;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .hero-icon {
+      font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+
+    .main-content {
+      padding: 2rem 1rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .materia-card {
+      padding: 1rem;
+    }
+
+    .materia-icon {
+      font-size: 2rem;
+    }
+
+    .materia-name {
+      font-size: 1rem;
+    }
+  }
+</style>

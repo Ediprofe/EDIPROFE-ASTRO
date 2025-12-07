@@ -1,0 +1,104 @@
+/* Estilos adicionales para KaTeX */
+
+/* Display math - fórmulas en bloque */
+.katex-display {
+  margin: 2rem 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1rem 0;
+}
+
+.katex-display > .katex {
+  max-width: 100%;
+}
+
+/* Inline math */
+.katex {
+  font-size: 1.1em;
+}
+
+/* Mejorar legibilidad en móviles */
+@media (max-width: 640px) {
+  .katex {
+    font-size: 1em;
+  }
+  
+  .katex-display {
+    margin: 1.5rem 0 !important;
+    padding: 0.75rem 0;
+  }
+}
+
+/* Errores de KaTeX */
+.katex-error {
+  color: #cc0000;
+  background: #fff0f0;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* Placeholder para errores de renderizado */
+.math-error {
+  display: inline-block;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+  margin: 0.5rem 0;
+}
+
+/* Asegurar que las fórmulas en tablas se vean bien */
+table .katex {
+  font-size: 1em;
+}
+
+table .katex-display {
+  margin: 0.5rem 0 !important;
+  padding: 0.5rem 0;
+}
+
+/* Fórmulas en listas */
+li .katex-display {
+  margin: 1rem 0 !important;
+}
+
+/* Modo oscuro */
+html.dark .katex {
+  color: var(--text-primary);
+}
+
+html.dark .katex-error {
+  background: #3f1a1a;
+  color: #fca5a5;
+}
+
+html.dark .math-error {
+  background: #3f1a1a;
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Scrollbar para fórmulas largas */
+.katex-display::-webkit-scrollbar {
+  height: 4px;
+}
+
+.katex-display::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.katex-display::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 2px;
+}
+
+/* Animación suave al hacer hover en fórmulas */
+.katex-display:hover {
+  background: rgba(37, 99, 235, 0.02);
+  border-radius: 4px;
+}
