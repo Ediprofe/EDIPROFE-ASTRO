@@ -62,13 +62,14 @@ Object.values(temas).forEach(arr => {
   arr.sort((a, b) => a.slug.localeCompare(b.slug));
 });
 
-// Obtener nombres desde metadatos
+// Obtener nombres desde metadatos (usar claves limpias en minúsculas)
 const materiaName = getMateriaName(materia);
-const capituloKey = `${materia}/${capitulo}`;
+const capituloKey = `${materia}/${cleanCapitulo.toLowerCase()}`;
 const capituloName = getMetaNameFromStore(capituloKey, formatName(capitulo));
 
 const getMetaName = (tema: string): string => {
-  const key = `${materia}/${capitulo}/${tema}`;
+  const cleanTema = cleanSegment(tema).toLowerCase();
+  const key = `${materia}/${cleanCapitulo.toLowerCase()}/${cleanTema}`;
   return getMetaNameFromStore(key, formatBlockName(tema));
 };
 

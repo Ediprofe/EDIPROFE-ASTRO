@@ -4,7 +4,7 @@ Al igual que ocurre con la distancia y el desplazamiento, en el lenguaje cotidia
 
 ---
 
-## ⚡ **Rapidez ($v$)**
+## ⚡ **Rapidez**
 
 Es una magnitud **escalar** que indica qué tan deprisa se recorrió una **distancia** total. No tiene en cuenta la dirección.
 
@@ -19,7 +19,7 @@ $$
 v = \frac{d}{t}
 $$
 
-## 🧭 **Velocidad ($\vec{v}$)**
+## 🧭 **Velocidad**
 
 Es una magnitud **vectorial** que indica qué tan rápido cambió la **posición** (desplazamiento) y en qué dirección.
 
@@ -48,13 +48,13 @@ Al ser una línea recta sin retrocesos, la distancia es igual a la magnitud del 
 * Desplazamiento: $\Delta x = +100\,\mathrm{m}$ (sentido positivo)
 * Tiempo: $t = 10\,\mathrm{s}$
 
-**2. Cálculo de la Rapidez ($v$):**
+**2. Cálculo de la Rapidez**
 
 $$
 v = \frac{100\,\mathrm{m}}{10\,\mathrm{s}} = 10\,\mathrm{m/s}
 $$
 
-**3. Cálculo de la Velocidad ($\vec{v}$):**
+**3. Cálculo de la Velocidad**
 
 $$
 \vec{v} = \frac{+100\,\mathrm{m}}{10\,\mathrm{s}} = +10\,\mathrm{m/s}

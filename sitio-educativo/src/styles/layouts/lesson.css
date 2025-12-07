@@ -270,6 +270,7 @@
   font-size: 1.0625rem;
   line-height: 1.8;
   color: var(--text-primary);
+  letter-spacing: -0.008em;
 }
 
 /* Ocultar el primer H1 del contenido (ya se muestra en el header) */
@@ -279,8 +280,8 @@
 
 /* Estilos para contenido */
 :global(.content-body h2) {
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
   color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 700;
@@ -289,24 +290,41 @@
 }
 
 :global(.content-body h3) {
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2.25rem;
+  margin-bottom: 1rem;
   color: var(--text-primary);
   font-size: 1.25rem;
   font-weight: 600;
 }
 
 :global(.content-body p) {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 :global(.content-body ul, .content-body ol) {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   padding-left: 1.75rem;
 }
 
 :global(.content-body li) {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
+  line-height: 1.7;
+}
+
+:global(.content-body li:last-child) {
+  margin-bottom: 0;
+}
+
+/* Separadores horizontales */
+:global(.content-body hr) {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color, #e2e8f0), transparent);
+  margin: 3rem 0;
+}
+
+:global(html.dark .content-body hr) {
+  background: linear-gradient(90deg, transparent, #334155, transparent);
 }
 
 /* Tablas - diseño mejorado */
@@ -319,7 +337,7 @@
 :global(.content-body table) {
   border-collapse: separate;
   border-spacing: 0;
-  margin: 2rem auto;
+  margin: 2.5rem auto;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
@@ -335,12 +353,11 @@
 :global(.content-body th) {
   background: linear-gradient(135deg, #1d4ed8, #2563eb);
   color: white;
-  padding: 1rem 1.25rem;
+  padding: 0.875rem 1rem;
   text-align: center;
   font-weight: 600;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
 }
 
 :global(.content-body th:first-child) {
@@ -352,10 +369,11 @@
 }
 
 :global(.content-body td) {
-  padding: 0.875rem 1.25rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-color, #e2e8f0);
   text-align: center;
   background: var(--bg-secondary);
+  font-size: 0.9375rem;
   transition: background 0.15s;
 }
 
@@ -430,12 +448,20 @@
 /* Blockquotes */
 :global(.content-body blockquote) {
   border-left: 4px solid #2563eb;
-  padding: 1rem 1.5rem;
-  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  margin: 2.5rem 0;
   background: rgba(37, 99, 235, 0.04);
   border-radius: 0 8px 8px 0;
   color: var(--text-secondary);
   font-style: italic;
+}
+
+:global(.content-body blockquote p) {
+  margin-bottom: 0.75rem;
+}
+
+:global(.content-body blockquote p:last-child) {
+  margin-bottom: 0;
 }
 
 :global(html.dark .content-body blockquote) {

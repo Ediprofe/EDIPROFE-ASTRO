@@ -8,6 +8,7 @@ import { getMetaName } from '../utils/load-meta';
 import { formatName, formatBlockName, cleanSegment } from '../utils/navigation-generator.js';
 import { materiaConfig, getMateriaName } from '../config/materias';
 import { isMateriaSlug } from '../types/content';
+import { cleanLatex } from '../utils/clean-latex';
 
 interface Props {
   frontmatter: {
@@ -34,10 +35,10 @@ const config = isMateriaSlug(materia)
   ? materiaConfig[materia] 
   : materiaConfig.fisica;
 
-// Obtener nombres con tildes desde metadatos
+// Obtener nombres con tildes desde metadatos (usar claves en minúsculas)
 const materiaName = isMateriaSlug(materia) ? getMateriaName(materia) : formatName(materia);
-const unidadKey = `${materia}/${unidad}`;
-const bloqueKey = `${materia}/${unidad}/${bloque}`;
+const unidadKey = `${materia}/${unidad.toLowerCase()}`;
+const bloqueKey = `${materia}/${unidad.toLowerCase()}/${bloque.toLowerCase()}`;
 const unidadName = getMetaName(unidadKey, formatName(unidad));
 const bloqueName = getMetaName(bloqueKey, formatBlockName(bloque));
 
@@ -118,7 +119,7 @@ const cleanBloque = cleanSegment(bloque);
             </div>
             <div class="nav-content">
               <span class="nav-label">Lección anterior</span>
-              <span class="nav-title">{prevLesson.title}</span>
+              <span class="nav-title">{cleanLatex(prevLesson.title)}</span>
             </div>
           </a>
         ) : (
@@ -129,7 +130,7 @@ const cleanBloque = cleanSegment(bloque);
           <a href={`/${nextLesson.slug}`} class="nav-card nav-next">
             <div class="nav-content">
               <span class="nav-label">Siguiente lección</span>
-              <span class="nav-title">{nextLesson.title}</span>
+              <span class="nav-title">{cleanLatex(nextLesson.title)}</span>
             </div>
             <div class="nav-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

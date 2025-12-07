@@ -1,4 +1,6 @@
 ---
+import { cleanLatex } from '../../utils/clean-latex';
+
 interface Props {
   headings: Array<{ depth: number; slug: string; text: string }>;
 }
@@ -21,7 +23,7 @@ const tocHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
         {tocHeadings.map(heading => (
           <li class:list={['toc-item', `depth-${heading.depth}`]}>
             <a href={`#${heading.slug}`} class="toc-link">
-              {heading.text}
+              {cleanLatex(heading.text)}
             </a>
           </li>
         ))}

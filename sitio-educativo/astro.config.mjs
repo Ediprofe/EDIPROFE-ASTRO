@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeExternalLinks from 'rehype-external-links';
 import { youtubeAutoEmbed } from './src/plugins/youtube-auto-embed.js';
 
 export default defineConfig({
@@ -45,6 +46,10 @@ export default defineConfig({
           "\\sen": "\\text{sen}",
           "\\cos": "\\text{cos}"
         }
+      }],
+      [rehypeExternalLinks, {
+        target: '_blank',
+        rel: ['noopener', 'noreferrer']
       }]
     ],
     smartypants: false,

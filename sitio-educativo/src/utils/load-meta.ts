@@ -11,19 +11,33 @@ const metaFiles = import.meta.glob<MetaEntry>('/src/content/**/_meta.json', {
 });
 
 /**
+ * Limpia prefijos numéricos de cada segmento de una ruta y normaliza a minúsculas
+ * Ej: "fisica/02-cinematica/03-MRU" -> "fisica/cinematica/mru"
+ * Esto es necesario porque Astro convierte los slugs a minúsculas
+ */
+function cleanPath(path: string): string {
+  return path
+    .split('/')
+    .map(segment => segment.replace(/^\d+-/, '').toLowerCase())
+    .join('/');
+}
+
+/**
  * Carga todos los metadatos de _meta.json y los organiza por ruta
+ * Las claves se normalizan sin prefijos numéricos para coincidir con URLs limpias
  * @returns Objeto con todos los metadatos indexados por ruta
  */
 export function loadAllMeta(): AllMeta {
   const metaData: AllMeta = {};
   
   Object.entries(metaFiles).forEach(([path, module]) => {
-    // path ejemplo: /src/content/fisica/cinematica/_meta.json
-    // Extraer: fisica/cinematica
+    // path ejemplo: /src/content/fisica/02-cinematica/_meta.json
+    // Extraer: fisica/02-cinematica -> fisica/cinematica
     const match = path.match(/\/src\/content\/(.+)\/_meta\.json$/);
     if (match && module) {
-      const key = match[1]; // "fisica/cinematica" o "fisica/cinematica/01-introduccion"
-      metaData[key] = module;
+      const rawKey = match[1]; // "fisica/02-cinematica"
+      const cleanKey = cleanPath(rawKey); // "fisica/cinematica"
+      metaData[cleanKey] = module;
     }
   });
   

@@ -93,15 +93,16 @@ const MATERIA_NAMES = {
 export function buildNavigationFromLessonsWithCollection(lessons, collectionName, metaData = {}) {
   const navigation = {};
   
-  // metaData estructura: { "unidad-slug": { name: "Nombre" }, "unidad-slug/bloque-slug": { name: "Nombre" } }
+  // metaData estructura: { "materia/capitulo": { name: "Nombre" }, "materia/capitulo/tema": { name: "Nombre" } }
+  // Las claves en metaData están limpias (sin prefijos numéricos) y en minúsculas
   const getUnidadName = (unidadSlug) => {
-    const key = `${collectionName}/${unidadSlug}`;
-    return metaData[key]?.name || formatName(unidadSlug);
+    const cleanKey = `${collectionName}/${cleanSegment(unidadSlug).toLowerCase()}`;
+    return metaData[cleanKey]?.name || formatName(unidadSlug);
   };
   
   const getBloqueName = (unidadSlug, bloqueSlug) => {
-    const key = `${collectionName}/${unidadSlug}/${bloqueSlug}`;
-    return metaData[key]?.name || formatBlockName(bloqueSlug);
+    const cleanKey = `${collectionName}/${cleanSegment(unidadSlug).toLowerCase()}/${cleanSegment(bloqueSlug).toLowerCase()}`;
+    return metaData[cleanKey]?.name || formatBlockName(bloqueSlug);
   };
   
   lessons.forEach(lesson => {
@@ -124,7 +125,7 @@ export function buildNavigationFromLessonsWithCollection(lessons, collectionName
     if (!navigation[materia].unidades[unidad]) {
       navigation[materia].unidades[unidad] = {
         name: getUnidadName(unidad),
-        slug: `${materia}/${unidad}`,
+        slug: `${materia}/${cleanSegment(unidad)}`,
         bloques: {}
       };
     }
@@ -132,14 +133,14 @@ export function buildNavigationFromLessonsWithCollection(lessons, collectionName
     if (!navigation[materia].unidades[unidad].bloques[bloque]) {
       navigation[materia].unidades[unidad].bloques[bloque] = {
         name: getBloqueName(unidad, bloque),
-        slug: `${materia}/${unidad}/${bloque}`,
+        slug: `${materia}/${cleanSegment(unidad)}/${cleanSegment(bloque)}`,
         lecciones: []
       };
     }
     
     navigation[materia].unidades[unidad].bloques[bloque].lecciones.push({
       title: lesson.data?.title || extractTitleFromContent(lesson.body || ''),
-      slug: `${materia}/${lesson.slug}`,
+      slug: `${materia}/${cleanSlug(lesson.slug)}`,
       order: extractOrder(archivo)
     });
   });

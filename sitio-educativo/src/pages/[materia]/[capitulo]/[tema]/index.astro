@@ -64,10 +64,10 @@ const allLessons = await getLessonsByMateria(materia);
 const lecciones = filterLessonsByPath(allLessons, `${capitulo}/${tema}/`)
   .sort((a, b) => a.slug.localeCompare(b.slug));
 
-// Obtener nombres desde metadatos
+// Obtener nombres desde metadatos (usar claves limpias en minúsculas)
 const materiaName = getMateriaName(materia);
-const capituloKey = `${materia}/${capitulo}`;
-const temaKey = `${materia}/${capitulo}/${tema}`;
+const capituloKey = `${materia}/${cleanCapitulo.toLowerCase()}`;
+const temaKey = `${materia}/${cleanCapitulo.toLowerCase()}/${cleanTema.toLowerCase()}`;
 const capituloName = getMetaNameFromStore(capituloKey, formatName(capitulo));
 const temaName = getMetaNameFromStore(temaKey, formatBlockName(tema));
 
