@@ -3,7 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Footer from '../../components/Layout/Footer.astro';
 import MobileMenu from '../../components/Navigation/MobileMenu.astro';
 import CollapsibleSidebar from '../../components/Navigation/CollapsibleSidebar.astro';
-import { formatName, formatBlockName } from '../../utils/navigation-generator.js';
+import { formatName, formatBlockName, cleanSegment } from '../../utils/navigation-generator.js';
+import { getMateriaName } from '../../config/materias';
 import { getMetaName as getMetaNameFromStore } from '../../utils/load-meta';
 import { getLessonsByMateria, groupLessonsByCapituloAndTema } from '../../utils/content-helpers';
 import { MATERIA_SLUGS, type MateriaSlug } from '../../types/content';
@@ -24,7 +25,7 @@ const { materia } = Astro.props;
 // Obtener lecciones de esta materia (tipado)
 const lessons = await getLessonsByMateria(materia);
 
-const materiaName = formatName(materia);
+const materiaName = getMateriaName(materia);
 
 // Helper para obtener nombre de unidad/bloque desde metadatos
 const getMetaName = (unidadSlug: string, bloqueSlug?: string): string => {
@@ -75,6 +76,9 @@ const icon = config.icon;
 
 // Agrupar por unidad y bloque usando helper tipado
 const grouped = groupLessonsByCapituloAndTema(lessons);
+
+// Calcular total de temas
+const totalTemas = Object.values(grouped).reduce((acc, temas) => acc + Object.keys(temas).length, 0);
 ---
 
 <BaseLayout title={materiaName}>
@@ -102,7 +106,7 @@ const grouped = groupLessonsByCapituloAndTema(lessons);
             </a>
             <div class="header-badge">
               <span class="badge-dot" style={`background: ${config.color}`}></span>
-              <span>{lessons.length} {lessons.length === 1 ? 'tema' : 'temas'}</span>
+              <span>{lessons.length} {lessons.length === 1 ? 'lección' : 'lecciones'}</span>
             </div>
           </div>
           
@@ -122,12 +126,14 @@ const grouped = groupLessonsByCapituloAndTema(lessons);
           </div>
           
           <div class="header-stats">
-            <div class="stat-card">
-              <span class="stat-icon">📚</span>
-              <div class="stat-info">
-                <span class="stat-value">{Object.keys(grouped).length}</span>
-                <span class="stat-label">{Object.keys(grouped).length === 1 ? 'Capítulo' : 'Capítulos'}</span>
-              </div>
+            <div class="stat-item">
+              <span class="stat-number">{Object.keys(grouped).length}</span>
+              <span class="stat-label">{Object.keys(grouped).length === 1 ? 'Capítulo' : 'Capítulos'}</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number">{totalTemas}</span>
+              <span class="stat-label">{totalTemas === 1 ? 'Tema' : 'Temas'}</span>
             </div>
           </div>
         </div>
@@ -146,7 +152,7 @@ const grouped = groupLessonsByCapituloAndTema(lessons);
                 
                 return (
                   <a 
-                    href={`/${materia}/${capitulo}`} 
+                    href={`/${materia}/${cleanSegment(capitulo)}`} 
                     id={`capitulo-${capitulo}`} 
                     class="capitulo-card-link" 
                     style={`--delay: ${capituloIndex * 0.1}s; --accent: ${config.color}`}

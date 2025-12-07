@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import Footer from '../../../../components/Layout/Footer.astro';
-import { formatName, formatBlockName, extractTitleFromContent } from '../../../../utils/navigation-generator.js';
+import { formatName, formatBlockName, extractTitleFromContent, cleanSegment, cleanSlug } from '../../../../utils/navigation-generator.js';
 import { getMetaName as getMetaNameFromStore } from '../../../../utils/load-meta';
 import CollapsibleSidebar from '../../../../components/Navigation/CollapsibleSidebar.astro';
 import MobileMenu from '../../../../components/Navigation/MobileMenu.astro';
@@ -12,12 +12,12 @@ import {
   getUniqueTemas
 } from '../../../../utils/content-helpers';
 import { MATERIA_SLUGS, type MateriaSlug, type Lesson } from '../../../../types/content';
-import { materiaConfig } from '../../../../config/materias';
+import { materiaConfig, getMateriaName } from '../../../../config/materias';
 
 export async function getStaticPaths() {
   const paths: Array<{ 
     params: { materia: string; capitulo: string; tema: string }; 
-    props: { materia: MateriaSlug; capitulo: string; tema: string } 
+    props: { materia: MateriaSlug; capitulo: string; tema: string; cleanCapitulo: string; cleanTema: string } 
   }> = [];
   
   for (const materia of MATERIA_SLUGS) {
@@ -34,9 +34,12 @@ export async function getStaticPaths() {
     for (const temaPath of temasSet) {
       const [capitulo, tema] = temaPath.split('/');
       if (capitulo && tema) {
+        // URLs limpias sin prefijos numéricos
+        const cleanCapitulo = cleanSegment(capitulo);
+        const cleanTema = cleanSegment(tema);
         paths.push({
-          params: { materia, capitulo, tema },
-          props: { materia, capitulo, tema }
+          params: { materia, capitulo: cleanCapitulo, tema: cleanTema },
+          props: { materia, capitulo, tema, cleanCapitulo, cleanTema }
         });
       }
     }
@@ -49,9 +52,11 @@ interface Props {
   materia: MateriaSlug;
   capitulo: string;
   tema: string;
+  cleanCapitulo: string;
+  cleanTema: string;
 }
 
-const { materia, capitulo, tema } = Astro.props;
+const { materia, capitulo, tema, cleanCapitulo, cleanTema } = Astro.props;
 const config = materiaConfig[materia] ?? materiaConfig.fisica;
 
 // Obtener lecciones de este tema (tipado)
@@ -60,7 +65,7 @@ const lecciones = filterLessonsByPath(allLessons, `${capitulo}/${tema}/`)
   .sort((a, b) => a.slug.localeCompare(b.slug));
 
 // Obtener nombres desde metadatos
-const materiaName = formatName(materia);
+const materiaName = getMateriaName(materia);
 const capituloKey = `${materia}/${capitulo}`;
 const temaKey = `${materia}/${capitulo}/${tema}`;
 const capituloName = getMetaNameFromStore(capituloKey, formatName(capitulo));
@@ -81,11 +86,17 @@ const temaIndex = temasDelCapitulo.indexOf(tema);
     <CollapsibleSidebar currentPath={Astro.url.pathname} />
     
     <main class="main-content">
-      <!-- Header -->
-      <header class="page-header" style={`--accent: ${config.color}`}>
+      <!-- Header Premium -->
+      <header class={`page-header page-header-${materia}`}>
+        <div class="header-bg">
+          <div class="header-orb header-orb-1"></div>
+          <div class="header-orb header-orb-2"></div>
+          <div class="header-grid"></div>
+        </div>
+        
         <div class="header-content">
           <div class="header-top">
-            <a href={`/${materia}/${capitulo}`} class="back-link">
+            <a href={`/${materia}/${cleanCapitulo}`} class="back-link">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
@@ -100,34 +111,30 @@ const temaIndex = temasDelCapitulo.indexOf(tema);
             <div class="header-text">
               <span class="header-label">Tema {temaIndex + 1}</span>
               <h1 class="header-title">{temaName}</h1>
-              <p class="header-desc">{lecciones.length} {lecciones.length === 1 ? 'lección' : 'lecciones'}</p>
+              <p class="header-desc">Explora las lecciones de este tema</p>
             </div>
+          </div>
+          
+          <div class="header-stats">
+            <div class="stat-item">
+              <span class="stat-number">{lecciones.length}</span>
+              <span class="stat-label">{lecciones.length === 1 ? 'Lección' : 'Lecciones'}</span>
+            </div>
+          </div>
+          
+          <!-- Breadcrumb integrado -->
+          <div class="header-breadcrumb">
+            <a href={`/${materia}`} class="crumb-link">
+              <span class="crumb-icon">{config.icon}</span>
+              <span>{materiaName}</span>
+            </a>
+            <span class="crumb-sep">›</span>
+            <a href={`/${materia}/${cleanCapitulo}`} class="crumb-link">{capituloName}</a>
+            <span class="crumb-sep">›</span>
+            <span class="crumb-current">{temaName}</span>
           </div>
         </div>
       </header>
-
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb">
-        <div class="breadcrumb-inner">
-          <div class="breadcrumb-item">
-            <span class="breadcrumb-label">Materia</span>
-            <a href={`/${materia}`} class="breadcrumb-link-pill" style={`--accent: ${config.color}`}>
-              <span class="breadcrumb-icon">{config.icon}</span>
-              <span>{materiaName}</span>
-            </a>
-          </div>
-          <span class="breadcrumb-sep">›</span>
-          <div class="breadcrumb-item">
-            <span class="breadcrumb-label">Capítulo</span>
-            <a href={`/${materia}/${capitulo}`} class="breadcrumb-link">{capituloName}</a>
-          </div>
-          <span class="breadcrumb-sep">›</span>
-          <div class="breadcrumb-item">
-            <span class="breadcrumb-label">Tema</span>
-            <span class="breadcrumb-current">{temaName}</span>
-          </div>
-        </div>
-      </nav>
 
       <!-- Lista de Lecciones -->
       <section class="lecciones-section">
@@ -137,7 +144,7 @@ const temaIndex = temasDelCapitulo.indexOf(tema);
             
             return (
               <a 
-                href={`/${materia}/${leccion.slug}`}
+                href={`/${materia}/${cleanSlug(leccion.slug)}`}
                 class="leccion-card-link" 
                 style={`--delay: ${leccionIndex * 0.08}s; --accent: ${config.color}`}
               >

@@ -1,5 +1,7 @@
 export function formatName(slug) {
-  return slug
+  // Primero quitar prefijo numérico si existe
+  const cleanSlug = slug.replace(/^\d+-/, '');
+  return cleanSlug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
@@ -16,6 +18,25 @@ export function formatBlockName(slug) {
 export function extractOrder(filename) {
   const match = filename.match(/^(\d+)-/);
   return match ? parseInt(match[1]) : 999;
+}
+
+/**
+ * Limpia un slug removiendo prefijos numéricos de cada segmento
+ * Ej: "01-introduccion/02-tema/03-leccion" -> "introduccion/tema/leccion"
+ */
+export function cleanSlug(slug) {
+  return slug
+    .split('/')
+    .map(segment => segment.replace(/^\d+-/, ''))
+    .join('/');
+}
+
+/**
+ * Limpia solo un segmento de slug (sin /)
+ * Ej: "01-introduccion" -> "introduccion"
+ */
+export function cleanSegment(segment) {
+  return segment.replace(/^\d+-/, '');
 }
 
 export function extractTitleFromContent(content) {
@@ -61,6 +82,14 @@ export async function getMetaForPath(basePath, collectionName, unidad, bloque = 
   }
 }
 
+// Nombres de materias con tildes
+const MATERIA_NAMES = {
+  matematicas: 'Matemáticas',
+  fisica: 'Física',
+  quimica: 'Química',
+  ciencias: 'Ciencias'
+};
+
 export function buildNavigationFromLessonsWithCollection(lessons, collectionName, metaData = {}) {
   const navigation = {};
   
@@ -86,7 +115,7 @@ export function buildNavigationFromLessonsWithCollection(lessons, collectionName
     // Crear estructura de navegación
     if (!navigation[materia]) {
       navigation[materia] = {
-        name: formatName(materia),
+        name: MATERIA_NAMES[materia] || formatName(materia),
         slug: materia,
         unidades: {}
       };

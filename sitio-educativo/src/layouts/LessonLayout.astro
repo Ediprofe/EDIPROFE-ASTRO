@@ -2,12 +2,11 @@
 import BaseLayout from './BaseLayout.astro';
 import Footer from '../components/Layout/Footer.astro';
 import CollapsibleSidebar from '../components/Navigation/CollapsibleSidebar.astro';
-import Breadcrumb from '../components/Navigation/Breadcrumb.astro';
 import TableOfContents from '../components/Content/TableOfContents.astro';
 import MobileMenu from '../components/Navigation/MobileMenu.astro';
 import { getMetaName } from '../utils/load-meta';
-import { formatName, formatBlockName } from '../utils/navigation-generator.js';
-import { materiaConfig } from '../config/materias';
+import { formatName, formatBlockName, cleanSegment } from '../utils/navigation-generator.js';
+import { materiaConfig, getMateriaName } from '../config/materias';
 import { isMateriaSlug } from '../types/content';
 
 interface Props {
@@ -36,10 +35,15 @@ const config = isMateriaSlug(materia)
   : materiaConfig.fisica;
 
 // Obtener nombres con tildes desde metadatos
+const materiaName = isMateriaSlug(materia) ? getMateriaName(materia) : formatName(materia);
 const unidadKey = `${materia}/${unidad}`;
 const bloqueKey = `${materia}/${unidad}/${bloque}`;
 const unidadName = getMetaName(unidadKey, formatName(unidad));
 const bloqueName = getMetaName(bloqueKey, formatBlockName(bloque));
+
+// URLs limpias para navegación
+const cleanUnidad = cleanSegment(unidad);
+const cleanBloque = cleanSegment(bloque);
 ---
 
 <BaseLayout title={title} description={frontmatter.description}>
@@ -49,18 +53,51 @@ const bloqueName = getMetaName(bloqueKey, formatBlockName(bloque));
     <CollapsibleSidebar currentPath={url} />
     
     <main class="lesson-content">
-      <Breadcrumb materia={materia} unidad={unidad} bloque={bloque} />
+      <!-- Header Premium de Lección (incluye breadcrumb) -->
+      <header class={`lesson-header lesson-header-${materia}`}>
+        <div class="header-bg">
+          <div class="header-orb header-orb-1"></div>
+          <div class="header-orb header-orb-2"></div>
+          <div class="header-grid"></div>
+        </div>
+        
+        <div class="header-content">
+          <div class="header-top">
+            <a href={`/${materia}/${cleanUnidad}/${cleanBloque}`} class="back-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>Volver a {bloqueName}</span>
+            </a>
+          </div>
+          
+          <div class="header-main">
+            <div class="header-icon-wrapper" style={`background: ${config.gradient}`}>
+              <span class="header-icon">📖</span>
+            </div>
+            <div class="header-text">
+              <span class="header-label">Lección</span>
+              <h1 class="header-title">{title}</h1>
+              {frontmatter.description && (
+                <p class="header-desc">{frontmatter.description}</p>
+              )}
+            </div>
+          </div>
+          
+          <div class="header-breadcrumb">
+            <a href={`/${materia}`} class="crumb-link">
+              <span class="crumb-icon">{config.icon}</span>
+              <span>{materiaName}</span>
+            </a>
+            <span class="crumb-sep">›</span>
+            <a href={`/${materia}/${cleanUnidad}`} class="crumb-link">{unidadName}</a>
+            <span class="crumb-sep">›</span>
+            <a href={`/${materia}/${cleanUnidad}/${cleanBloque}`} class="crumb-link">{bloqueName}</a>
+          </div>
+        </div>
+      </header>
       
       <article class={`content-article content-article-${materia}`}>
-        <!-- Header de lección -->
-        <header class="lesson-header">
-          <h1 class="lesson-title">{title}</h1>
-          
-          {frontmatter.description && (
-            <p class="lesson-description">{frontmatter.description}</p>
-          )}
-        </header>
-        
         {headings.length > 2 && (
           <TableOfContents headings={headings} />
         )}

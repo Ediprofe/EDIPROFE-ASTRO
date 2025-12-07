@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Footer from '../../../components/Layout/Footer.astro';
-import { formatName, formatBlockName } from '../../../utils/navigation-generator.js';
+import { formatName, formatBlockName, cleanSegment } from '../../../utils/navigation-generator.js';
 import { getMetaName as getMetaNameFromStore } from '../../../utils/load-meta';
 import CollapsibleSidebar from '../../../components/Navigation/CollapsibleSidebar.astro';
 import MobileMenu from '../../../components/Navigation/MobileMenu.astro';
@@ -11,19 +11,21 @@ import {
   getUniqueCapitulos 
 } from '../../../utils/content-helpers';
 import { MATERIA_SLUGS, type MateriaSlug, type Lesson } from '../../../types/content';
-import { materiaConfig } from '../../../config/materias';
+import { materiaConfig, getMateriaName } from '../../../config/materias';
 
 export async function getStaticPaths() {
-  const paths: Array<{ params: { materia: string; capitulo: string }; props: { materia: MateriaSlug; capitulo: string } }> = [];
+  const paths: Array<{ params: { materia: string; capitulo: string }; props: { materia: MateriaSlug; capitulo: string; cleanCapitulo: string } }> = [];
   
   for (const materia of MATERIA_SLUGS) {
     const lessons = await getLessonsByMateria(materia);
     const capitulos = getUniqueCapitulos(lessons);
     
     for (const capitulo of capitulos) {
+      // URL limpia sin prefijo numérico
+      const cleanCapitulo = cleanSegment(capitulo);
       paths.push({
-        params: { materia, capitulo },
-        props: { materia, capitulo }
+        params: { materia, capitulo: cleanCapitulo },
+        props: { materia, capitulo, cleanCapitulo }
       });
     }
   }
@@ -34,9 +36,10 @@ export async function getStaticPaths() {
 interface Props {
   materia: MateriaSlug;
   capitulo: string;
+  cleanCapitulo: string;
 }
 
-const { materia, capitulo } = Astro.props;
+const { materia, capitulo, cleanCapitulo } = Astro.props;
 const config = materiaConfig[materia] ?? materiaConfig.fisica;
 
 // Obtener lecciones de este capítulo (tipado)
@@ -60,7 +63,7 @@ Object.values(temas).forEach(arr => {
 });
 
 // Obtener nombres desde metadatos
-const materiaName = formatName(materia);
+const materiaName = getMateriaName(materia);
 const capituloKey = `${materia}/${capitulo}`;
 const capituloName = getMetaNameFromStore(capituloKey, formatName(capitulo));
 
@@ -72,6 +75,10 @@ const getMetaName = (tema: string): string => {
 // Calcular índice del capítulo
 const allCapitulos = getUniqueCapitulos(allLessons);
 const capituloIndex = allCapitulos.indexOf(capitulo);
+
+// Calcular totales
+const totalTemas = Object.keys(temas).length;
+const totalLecciones = Object.values(temas).reduce((acc, arr) => acc + arr.length, 0);
 ---
 
 <BaseLayout title={`${capituloName} - ${materiaName}`}>
@@ -81,8 +88,14 @@ const capituloIndex = allCapitulos.indexOf(capitulo);
     <CollapsibleSidebar currentPath={Astro.url.pathname} />
     
     <main class="main-content">
-      <!-- Header -->
-      <header class="page-header" style={`--accent: ${config.color}`}>
+      <!-- Header Premium -->
+      <header class={`page-header page-header-${materia}`}>
+        <div class="header-bg">
+          <div class="header-orb header-orb-1"></div>
+          <div class="header-orb header-orb-2"></div>
+          <div class="header-grid"></div>
+        </div>
+        
         <div class="header-content">
           <div class="header-top">
             <a href={`/${materia}`} class="back-link">
@@ -100,29 +113,33 @@ const capituloIndex = allCapitulos.indexOf(capitulo);
             <div class="header-text">
               <span class="header-label">Capítulo {capituloIndex + 1}</span>
               <h1 class="header-title">{capituloName}</h1>
-              <p class="header-desc">{Object.keys(temas).length} {Object.keys(temas).length === 1 ? 'tema' : 'temas'}</p>
+              <p class="header-desc">Explora los temas y lecciones de este capítulo</p>
             </div>
+          </div>
+          
+          <div class="header-stats">
+            <div class="stat-item">
+              <span class="stat-number">{totalTemas}</span>
+              <span class="stat-label">{totalTemas === 1 ? 'Tema' : 'Temas'}</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number">{totalLecciones}</span>
+              <span class="stat-label">{totalLecciones === 1 ? 'Lección' : 'Lecciones'}</span>
+            </div>
+          </div>
+          
+          <!-- Breadcrumb integrado -->
+          <div class="header-breadcrumb">
+            <a href={`/${materia}`} class="crumb-link">
+              <span class="crumb-icon">{config.icon}</span>
+              <span>{materiaName}</span>
+            </a>
+            <span class="crumb-sep">›</span>
+            <span class="crumb-current">{capituloName}</span>
           </div>
         </div>
       </header>
-
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb">
-        <div class="breadcrumb-inner">
-          <div class="breadcrumb-item">
-            <span class="breadcrumb-label">Materia</span>
-            <a href={`/${materia}`} class="breadcrumb-materia" style={`--accent: ${config.color}`}>
-              <span class="breadcrumb-materia-icon">{config.icon}</span>
-              <span>{materiaName}</span>
-            </a>
-          </div>
-          <span class="breadcrumb-sep">›</span>
-          <div class="breadcrumb-item">
-            <span class="breadcrumb-label">Capítulo</span>
-            <span class="breadcrumb-current">{capituloName}</span>
-          </div>
-        </div>
-      </nav>
 
       <!-- Lista de Temas -->
       <section class="temas-section">
@@ -132,7 +149,7 @@ const capituloIndex = allCapitulos.indexOf(capitulo);
             
             return (
               <a 
-                href={`/${materia}/${capitulo}/${tema}`}
+                href={`/${materia}/${cleanCapitulo}/${cleanSegment(tema)}`}
                 class="tema-card-link" 
                 style={`--delay: ${temaIndex * 0.1}s; --accent: ${config.color}`}
               >

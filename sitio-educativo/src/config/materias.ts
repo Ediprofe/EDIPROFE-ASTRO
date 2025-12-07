@@ -5,6 +5,7 @@
  */
 
 export interface MateriaConfig {
+  name: string;        // Nombre con tilde para mostrar
   icon: string;
   color: string;
   gradient: string;
@@ -17,6 +18,7 @@ export type MateriaSlug = typeof MATERIAS_SLUGS[number];
 
 export const materiaConfig: Record<MateriaSlug, MateriaConfig> = {
   matematicas: {
+    name: 'Matemáticas',
     icon: '🧮',
     color: '#ef4444',
     gradient: 'linear-gradient(135deg, #ef4444, #dc2626)',
@@ -24,6 +26,7 @@ export const materiaConfig: Record<MateriaSlug, MateriaConfig> = {
     description: 'Álgebra, geometría, cálculo y más'
   },
   fisica: {
+    name: 'Física',
     icon: '🚀',
     color: '#3b82f6',
     gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)',
@@ -31,6 +34,7 @@ export const materiaConfig: Record<MateriaSlug, MateriaConfig> = {
     description: 'Mecánica, ondas, termodinámica'
   },
   quimica: {
+    name: 'Química',
     icon: '⚛️',
     color: '#a855f7',
     gradient: 'linear-gradient(135deg, #a855f7, #9333ea)',
@@ -38,6 +42,7 @@ export const materiaConfig: Record<MateriaSlug, MateriaConfig> = {
     description: 'Química general y orgánica'
   },
   ciencias: {
+    name: 'Ciencias',
     icon: '🌍',
     color: '#22c55e',
     gradient: 'linear-gradient(135deg, #22c55e, #16a34a)',
@@ -65,4 +70,11 @@ export function getMateriaIcon(slug: string): string {
  */
 export function getMateriaColor(slug: string): string {
   return getMateriaConfig(slug).color;
+}
+
+/**
+ * Obtiene el nombre con tilde de una materia
+ */
+export function getMateriaName(slug: string): string {
+  return getMateriaConfig(slug).name;
 }

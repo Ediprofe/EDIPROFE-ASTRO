@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import LessonLayout from '../layouts/LessonLayout.astro';
+import { cleanSlug } from '../utils/navigation-generator.js';
 
 export async function getStaticPaths() {
   // Helper para extraer título del primer H1 del markdown
@@ -17,14 +18,16 @@ export async function getStaticPaths() {
     }
     return null;
   }
+  
   // Obtener todas las lecciones de todas las colecciones
-  const allLessons: Array<{ lesson: any; materia: string; fullSlug: string }> = [];
+  const allLessons: Array<{ lesson: any; materia: string; fullSlug: string; cleanFullSlug: string }> = [];
   
   // Función helper para agregar lecciones con su materia
   const addLessons = (lessons: any[], materiaName: string) => {
     lessons.forEach(lesson => {
       const fullSlug = `${materiaName}/${lesson.slug}`;
-      allLessons.push({ lesson, materia: materiaName, fullSlug });
+      const cleanFullSlug = `${materiaName}/${cleanSlug(lesson.slug)}`;
+      allLessons.push({ lesson, materia: materiaName, fullSlug, cleanFullSlug });
     });
   };
   
@@ -74,22 +77,26 @@ export async function getStaticPaths() {
       }
     }
     
+    // Partes limpias para navegación
+    const cleanParts = cleanSlug(item.lesson.slug).split('/');
+    
     return {
       params: { 
-        slug: item.fullSlug 
+        // URL limpia sin números
+        slug: item.cleanFullSlug 
       },
       props: { 
         lesson: item.lesson,
         materia: item.materia,
-        capitulo: parts[0] || '',  // Renombrado: unidad → capítulo
-        tema: parts[1] || '',       // Renombrado: bloque → tema
-        archivo: parts[2] || '',
+        capitulo: cleanParts[0] || '',  // Sin prefijo numérico
+        tema: cleanParts[1] || '',       // Sin prefijo numérico
+        archivo: cleanParts[2] || '',
         prevLesson: prevLesson ? {
-          slug: prevLesson.fullSlug,
+          slug: prevLesson.cleanFullSlug,  // URL limpia
           title: prevLesson.lesson.data?.title || extractTitleFromBody(prevLesson.lesson.body) || 'Lección anterior'
         } : null,
         nextLesson: nextLesson ? {
-          slug: nextLesson.fullSlug,
+          slug: nextLesson.cleanFullSlug,  // URL limpia
           title: nextLesson.lesson.data?.title || extractTitleFromBody(nextLesson.lesson.body) || 'Siguiente lección'
         } : null
       }
