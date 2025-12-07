@@ -1,45 +1,38 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Layout/Header.astro';
 import Footer from '../../components/Layout/Footer.astro';
-import LessonCard from '../../components/Content/LessonCard.astro';
 import MobileMenu from '../../components/Navigation/MobileMenu.astro';
 import CollapsibleSidebar from '../../components/Navigation/CollapsibleSidebar.astro';
-import { getCollection } from 'astro:content';
 import { formatName, formatBlockName } from '../../utils/navigation-generator.js';
-import { allMeta } from '../../utils/load-meta.js';
-import { materiaConfig as baseMateriaConfig, getMateriaConfig, MATERIAS_SLUGS } from '../../config/materias';
+import { getMetaName as getMetaNameFromStore } from '../../utils/load-meta';
+import { getLessonsByMateria, groupLessonsByCapituloAndTema } from '../../utils/content-helpers';
+import { MATERIA_SLUGS, type MateriaSlug } from '../../types/content';
 
 export async function getStaticPaths() {
-  const materias = ['matematicas', 'fisica', 'quimica', 'ciencias'];
-  return materias.map(materia => ({
+  return MATERIA_SLUGS.map(materia => ({
     params: { materia },
     props: { materia }
   }));
 }
 
 interface Props {
-  materia: string;
+  materia: MateriaSlug;
 }
 
 const { materia } = Astro.props;
 
-// Obtener lecciones de esta materia
-let lessons: any[] = [];
-try {
-  lessons = await getCollection(materia as any);
-} catch (e) {
-  // Colección vacía o no existe
-}
+// Obtener lecciones de esta materia (tipado)
+const lessons = await getLessonsByMateria(materia);
 
 const materiaName = formatName(materia);
 
 // Helper para obtener nombre de unidad/bloque desde metadatos
-const getMetaName = (unidadSlug: string, bloqueSlug?: string) => {
+const getMetaName = (unidadSlug: string, bloqueSlug?: string): string => {
   const key = bloqueSlug 
     ? `${materia}/${unidadSlug}/${bloqueSlug}`
     : `${materia}/${unidadSlug}`;
-  return allMeta[key]?.name || (bloqueSlug ? formatBlockName(bloqueSlug) : formatName(unidadSlug));
+  const fallback = bloqueSlug ? formatBlockName(bloqueSlug) : formatName(unidadSlug);
+  return getMetaNameFromStore(key, fallback);
 };
 
 const materiaConfig: Record<string, { icon: string; color: string; gradient: string; lightBg: string; sidebarIcon: string; sidebarColor: string }> = {
@@ -77,22 +70,11 @@ const materiaConfig: Record<string, { icon: string; color: string; gradient: str
   },
 };
 
-const config = materiaConfig[materia] || materiaConfig.fisica;
+const config = materiaConfig[materia] ?? materiaConfig.fisica;
 const icon = config.icon;
 
-// Agrupar por unidad y bloque
-const grouped: Record<string, Record<string, any[]>> = {};
-
-lessons.forEach(lesson => {
-  const parts = lesson.slug.split('/');
-  const unidad = parts[0] || 'general';
-  const bloque = parts[1] || 'general';
-  
-  if (!grouped[unidad]) grouped[unidad] = {};
-  if (!grouped[unidad][bloque]) grouped[unidad][bloque] = [];
-  
-  grouped[unidad][bloque].push(lesson);
-});
+// Agrupar por unidad y bloque usando helper tipado
+const grouped = groupLessonsByCapituloAndTema(lessons);
 ---
 
 <BaseLayout title={materiaName}>

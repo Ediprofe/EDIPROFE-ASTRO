@@ -1,0 +1,1 @@
+import"./ThemeToggle.astro_astro_type_script_index_0_lang.B3CC4qcW.js";const e=document.getElementById("mobile-menu-btn"),t=document.getElementById("mobile-menu");e?.addEventListener("click",()=>{t?.classList.toggle("open"),e.classList.toggle("open")});t?.querySelectorAll("a").forEach(n=>{n.addEventListener("click",()=>{t.classList.remove("open"),e?.classList.remove("open")})});

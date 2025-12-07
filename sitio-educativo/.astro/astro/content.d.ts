@@ -156,14 +156,14 @@ declare module 'astro:content' {
   slug: "biologia/bloque-01-celula/01-introduccion-celula";
   body: string;
   collection: "ciencias";
-  data: any
+  data: InferEntrySchema<"ciencias">
 } & { render(): Render[".md"] };
 "biologia/bloque-01-celula/02-organelos-celulares.md": {
 	id: "biologia/bloque-01-celula/02-organelos-celulares.md";
   slug: "biologia/bloque-01-celula/02-organelos-celulares";
   body: string;
   collection: "ciencias";
-  data: any
+  data: InferEntrySchema<"ciencias">
 } & { render(): Render[".md"] };
 };
 "fisica": {
@@ -172,210 +172,210 @@ declare module 'astro:content' {
   slug: "01-introduccion/01-introduccion/01-la-fisica-y-sus-ramas";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/01-introduccion/02-metodo-cientifico.md": {
 	id: "01-introduccion/01-introduccion/02-metodo-cientifico.md";
   slug: "01-introduccion/01-introduccion/02-metodo-cientifico";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/01-introduccion/03-medicion-y-cantidades-fisicas.md.md": {
 	id: "01-introduccion/01-introduccion/03-medicion-y-cantidades-fisicas.md.md";
   slug: "01-introduccion/01-introduccion/03-medicion-y-cantidades-fisicasmd";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/01-introduccion/04-precision-y-exactitud.md": {
 	id: "01-introduccion/01-introduccion/04-precision-y-exactitud.md";
   slug: "01-introduccion/01-introduccion/04-precision-y-exactitud";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/01-introduccion/05-cifras-significativas.md": {
 	id: "01-introduccion/01-introduccion/05-cifras-significativas.md";
   slug: "01-introduccion/01-introduccion/05-cifras-significativas";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/02-notacion-cientifica/01-notacion-cientifica.md": {
 	id: "01-introduccion/02-notacion-cientifica/01-notacion-cientifica.md";
   slug: "01-introduccion/02-notacion-cientifica/01-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/02-notacion-cientifica/02-forma-estandar-y-notacion-cientifica.md": {
 	id: "01-introduccion/02-notacion-cientifica/02-forma-estandar-y-notacion-cientifica.md";
   slug: "01-introduccion/02-notacion-cientifica/02-forma-estandar-y-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/02-notacion-cientifica/03-suma-y-resta-en-notacion-cientifica.md": {
 	id: "01-introduccion/02-notacion-cientifica/03-suma-y-resta-en-notacion-cientifica.md";
   slug: "01-introduccion/02-notacion-cientifica/03-suma-y-resta-en-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/02-notacion-cientifica/04-multiplicacion-y-division-en-notacion-cientifica.md": {
 	id: "01-introduccion/02-notacion-cientifica/04-multiplicacion-y-division-en-notacion-cientifica.md";
   slug: "01-introduccion/02-notacion-cientifica/04-multiplicacion-y-division-en-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/02-notacion-cientifica/05-taller-notacion-cientifica.md": {
 	id: "01-introduccion/02-notacion-cientifica/05-taller-notacion-cientifica.md";
   slug: "01-introduccion/02-notacion-cientifica/05-taller-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/03-conversion-de-unidades/01-factores-de-conversion.md": {
 	id: "01-introduccion/03-conversion-de-unidades/01-factores-de-conversion.md";
   slug: "01-introduccion/03-conversion-de-unidades/01-factores-de-conversion";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/03-conversion-de-unidades/02-taller-factores-de-conversion copy.md": {
 	id: "01-introduccion/03-conversion-de-unidades/02-taller-factores-de-conversion copy.md";
   slug: "01-introduccion/03-conversion-de-unidades/02-taller-factores-de-conversion-copy";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/03-conversion-de-unidades/03-factores-de-conversion-compuestos.md": {
 	id: "01-introduccion/03-conversion-de-unidades/03-factores-de-conversion-compuestos.md";
   slug: "01-introduccion/03-conversion-de-unidades/03-factores-de-conversion-compuestos";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/03-conversion-de-unidades/04-taller-factores-de-conversion-compuestos.md": {
 	id: "01-introduccion/03-conversion-de-unidades/04-taller-factores-de-conversion-compuestos.md";
   slug: "01-introduccion/03-conversion-de-unidades/04-taller-factores-de-conversion-compuestos";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/04-vectores/01-escalares-y-vectores.md": {
 	id: "01-introduccion/04-vectores/01-escalares-y-vectores.md";
   slug: "01-introduccion/04-vectores/01-escalares-y-vectores";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/04-vectores/02-elementos-de-un-vector.md": {
 	id: "01-introduccion/04-vectores/02-elementos-de-un-vector.md";
   slug: "01-introduccion/04-vectores/02-elementos-de-un-vector";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/04-vectores/03-representacion-de-vectores-en-el-plano.md.md": {
 	id: "01-introduccion/04-vectores/03-representacion-de-vectores-en-el-plano.md.md";
   slug: "01-introduccion/04-vectores/03-representacion-de-vectores-en-el-planomd";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/04-vectores/04-suma-y-resta-de-vectores.md": {
 	id: "01-introduccion/04-vectores/04-suma-y-resta-de-vectores.md";
   slug: "01-introduccion/04-vectores/04-suma-y-resta-de-vectores";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/04-vectores/05-multiplicacion-de-vectores copy.md": {
 	id: "01-introduccion/04-vectores/05-multiplicacion-de-vectores copy.md";
   slug: "01-introduccion/04-vectores/05-multiplicacion-de-vectores-copy";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "01-introduccion/04-vectores/06-taller-vectores.md": {
 	id: "01-introduccion/04-vectores/06-taller-vectores.md";
   slug: "01-introduccion/04-vectores/06-taller-vectores";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/01-introduccion/01-introduccion-a-la-fisica copy.md": {
 	id: "02-cinematica/01-introduccion/01-introduccion-a-la-fisica copy.md";
   slug: "02-cinematica/01-introduccion/01-introduccion-a-la-fisica-copy";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/01-introduccion/02-metodo-cientifico.md": {
 	id: "02-cinematica/01-introduccion/02-metodo-cientifico.md";
   slug: "02-cinematica/01-introduccion/02-metodo-cientifico";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/01-introduccion/03-medicion-y-cantidades-fisicas.md.md": {
 	id: "02-cinematica/01-introduccion/03-medicion-y-cantidades-fisicas.md.md";
   slug: "02-cinematica/01-introduccion/03-medicion-y-cantidades-fisicasmd";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/01-introduccion/04-precision-y-exactitud.md": {
 	id: "02-cinematica/01-introduccion/04-precision-y-exactitud.md";
   slug: "02-cinematica/01-introduccion/04-precision-y-exactitud";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/01-introduccion/05-cifras-significativas.md": {
 	id: "02-cinematica/01-introduccion/05-cifras-significativas.md";
   slug: "02-cinematica/01-introduccion/05-cifras-significativas";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/02-escalares-y-vectores/01-introduccion-a-la-notacion-cientifica copy.md": {
 	id: "02-cinematica/02-escalares-y-vectores/01-introduccion-a-la-notacion-cientifica copy.md";
   slug: "02-cinematica/02-escalares-y-vectores/01-introduccion-a-la-notacion-cientifica-copy";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/02-escalares-y-vectores/02-forma-estandar-y-notacion-cientifica.md": {
 	id: "02-cinematica/02-escalares-y-vectores/02-forma-estandar-y-notacion-cientifica.md";
   slug: "02-cinematica/02-escalares-y-vectores/02-forma-estandar-y-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/02-escalares-y-vectores/03-suma-y-resta-en-notacion-cientifica.md": {
 	id: "02-cinematica/02-escalares-y-vectores/03-suma-y-resta-en-notacion-cientifica.md";
   slug: "02-cinematica/02-escalares-y-vectores/03-suma-y-resta-en-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/02-escalares-y-vectores/04-multiplicacion-y-division-en-notacion-cientifica.md": {
 	id: "02-cinematica/02-escalares-y-vectores/04-multiplicacion-y-division-en-notacion-cientifica.md";
   slug: "02-cinematica/02-escalares-y-vectores/04-multiplicacion-y-division-en-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 "02-cinematica/02-escalares-y-vectores/05-taller-notacion-cientifica.md": {
 	id: "02-cinematica/02-escalares-y-vectores/05-taller-notacion-cientifica.md";
   slug: "02-cinematica/02-escalares-y-vectores/05-taller-notacion-cientifica";
   body: string;
   collection: "fisica";
-  data: any
+  data: InferEntrySchema<"fisica">
 } & { render(): Render[".md"] };
 };
 "matematicas": {
@@ -384,21 +384,21 @@ declare module 'astro:content' {
   slug: "algebra/bloque-01-fundamentos/01-introduccion";
   body: string;
   collection: "matematicas";
-  data: any
+  data: InferEntrySchema<"matematicas">
 } & { render(): Render[".md"] };
 "algebra/bloque-01-fundamentos/02-variables.md": {
 	id: "algebra/bloque-01-fundamentos/02-variables.md";
   slug: "algebra/bloque-01-fundamentos/02-variables";
   body: string;
   collection: "matematicas";
-  data: any
+  data: InferEntrySchema<"matematicas">
 } & { render(): Render[".md"] };
 "algebra/bloque-02-productos/01-productos-notables.md": {
 	id: "algebra/bloque-02-productos/01-productos-notables.md";
   slug: "algebra/bloque-02-productos/01-productos-notables";
   body: string;
   collection: "matematicas";
-  data: any
+  data: InferEntrySchema<"matematicas">
 } & { render(): Render[".md"] };
 };
 "quimica": {
@@ -407,7 +407,7 @@ declare module 'astro:content' {
   slug: "estequiometria/bloque-01-mol/01-concepto-mol";
   body: string;
   collection: "quimica";
-  data: any
+  data: InferEntrySchema<"quimica">
 } & { render(): Render[".md"] };
 };
 
@@ -419,5 +419,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	export type ContentConfig = never;
+	export type ContentConfig = typeof import("../../src/content/config.js");
 }

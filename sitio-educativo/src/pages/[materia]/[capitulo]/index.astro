@@ -1,64 +1,58 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Footer from '../../../components/Layout/Footer.astro';
 import { formatName, formatBlockName } from '../../../utils/navigation-generator.js';
-import { allMeta } from '../../../utils/load-meta.js';
+import { getMetaName as getMetaNameFromStore } from '../../../utils/load-meta';
 import CollapsibleSidebar from '../../../components/Navigation/CollapsibleSidebar.astro';
 import MobileMenu from '../../../components/Navigation/MobileMenu.astro';
-
-// Configuración de materias (consistente con sidebar)
-const materiaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
-  matematicas: { icon: '🧮', color: '#ef4444', gradient: 'linear-gradient(135deg, #ef4444, #dc2626)' },
-  fisica: { icon: '🚀', color: '#3b82f6', gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)' },
-  quimica: { icon: '⚛️', color: '#a855f7', gradient: 'linear-gradient(135deg, #a855f7, #9333ea)' },
-  ciencias: { icon: '🌍', color: '#22c55e', gradient: 'linear-gradient(135deg, #22c55e, #16a34a)' }
-};
+import { 
+  getLessonsByMateria, 
+  filterLessonsByPath, 
+  getUniqueCapitulos 
+} from '../../../utils/content-helpers';
+import { MATERIA_SLUGS, type MateriaSlug, type Lesson } from '../../../types/content';
+import { materiaConfig } from '../../../config/materias';
 
 export async function getStaticPaths() {
-  const paths: any[] = [];
-  const collections = ['matematicas', 'fisica', 'quimica', 'ciencias'];
+  const paths: Array<{ params: { materia: string; capitulo: string }; props: { materia: MateriaSlug; capitulo: string } }> = [];
   
-  for (const materia of collections) {
-    try {
-      const lessons = await getCollection(materia as any);
-      const capitulos = new Set<string>();
-      
-      lessons.forEach(lesson => {
-        const parts = lesson.slug.split('/');
-        if (parts[0]) capitulos.add(parts[0]);
+  for (const materia of MATERIA_SLUGS) {
+    const lessons = await getLessonsByMateria(materia);
+    const capitulos = getUniqueCapitulos(lessons);
+    
+    for (const capitulo of capitulos) {
+      paths.push({
+        params: { materia, capitulo },
+        props: { materia, capitulo }
       });
-      
-      capitulos.forEach(capitulo => {
-        paths.push({
-          params: { materia, capitulo },
-          props: { materia, capitulo }
-        });
-      });
-    } catch (e) {}
+    }
   }
   
   return paths;
 }
 
-const { materia, capitulo } = Astro.props;
-const config = materiaConfig[materia] || materiaConfig.fisica;
+interface Props {
+  materia: MateriaSlug;
+  capitulo: string;
+}
 
-// Obtener lecciones de este capítulo
-let lessons: any[] = [];
-try {
-  const allLessons = await getCollection(materia as any);
-  lessons = allLessons.filter(l => l.slug.startsWith(`${capitulo}/`));
-} catch (e) {}
+const { materia, capitulo } = Astro.props;
+const config = materiaConfig[materia] ?? materiaConfig.fisica;
+
+// Obtener lecciones de este capítulo (tipado)
+const allLessons = await getLessonsByMateria(materia);
+const lessons = filterLessonsByPath(allLessons, `${capitulo}/`);
 
 // Agrupar por tema
-const temas: Record<string, any[]> = {};
-lessons.forEach(lesson => {
+const temas: Record<string, Lesson[]> = {};
+for (const lesson of lessons) {
   const parts = lesson.slug.split('/');
   const tema = parts[1];
-  if (!temas[tema]) temas[tema] = [];
-  temas[tema].push(lesson);
-});
+  if (tema) {
+    if (!temas[tema]) temas[tema] = [];
+    temas[tema].push(lesson);
+  }
+}
 
 // Ordenar lecciones dentro de cada tema
 Object.values(temas).forEach(arr => {
@@ -68,20 +62,16 @@ Object.values(temas).forEach(arr => {
 // Obtener nombres desde metadatos
 const materiaName = formatName(materia);
 const capituloKey = `${materia}/${capitulo}`;
-const capituloName = (allMeta as any)[capituloKey]?.name || formatName(capitulo);
+const capituloName = getMetaNameFromStore(capituloKey, formatName(capitulo));
 
-const getMetaName = (tema: string) => {
+const getMetaName = (tema: string): string => {
   const key = `${materia}/${capitulo}/${tema}`;
-  return (allMeta as any)[key]?.name || formatBlockName(tema);
+  return getMetaNameFromStore(key, formatBlockName(tema));
 };
 
 // Calcular índice del capítulo
-let capituloIndex = 0;
-try {
-  const allLessons = await getCollection(materia as any);
-  const allCapitulos = [...new Set(allLessons.map(l => l.slug.split('/')[0]))].sort();
-  capituloIndex = allCapitulos.indexOf(capitulo);
-} catch (e) {}
+const allCapitulos = getUniqueCapitulos(allLessons);
+const capituloIndex = allCapitulos.indexOf(capitulo);
 ---
 
 <BaseLayout title={`${capituloName} - ${materiaName}`}>

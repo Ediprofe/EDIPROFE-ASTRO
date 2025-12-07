@@ -1,8 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import { buildNavigationFromLessonsWithCollection, mergeNavigations, formatName } from '../../utils/navigation-generator.js';
-import { allMeta } from '../../utils/load-meta.js';
-import { materiaConfig, MATERIAS_SLUGS } from '../../config/materias';
+import { buildNavigationFromLessonsWithCollection, mergeNavigations } from '../../utils/navigation-generator.js';
+import { allMeta } from '../../utils/load-meta';
+import { materiaConfig, getMateriaConfig } from '../../config/materias';
+import { MATERIA_SLUGS, isMateriaSlug } from '../../types/content';
 
 interface Props {
   currentPath: string;
@@ -77,7 +78,7 @@ const currentBloque = pathParts[2] || '';
     <div class="nav-label">Materias</div>
     
     {Object.entries(filteredNavigation).map(([materiaKey, materia]: [string, any]) => {
-      const config = materiaConfig[materiaKey] || materiaConfig.fisica;
+      const config = getMateriaConfig(materiaKey);
       const isActive = currentMateria === materiaKey;
       const lessonCount = Object.values(materia.unidades).reduce((acc: number, unidad: any) => {
         return acc + Object.values(unidad.bloques).reduce((acc2: number, bloque: any) => acc2 + bloque.lecciones.length, 0);

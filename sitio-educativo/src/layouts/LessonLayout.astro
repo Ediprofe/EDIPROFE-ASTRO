@@ -5,8 +5,10 @@ import CollapsibleSidebar from '../components/Navigation/CollapsibleSidebar.astr
 import Breadcrumb from '../components/Navigation/Breadcrumb.astro';
 import TableOfContents from '../components/Content/TableOfContents.astro';
 import MobileMenu from '../components/Navigation/MobileMenu.astro';
-import { allMeta } from '../utils/load-meta.js';
+import { getMetaName } from '../utils/load-meta';
 import { formatName, formatBlockName } from '../utils/navigation-generator.js';
+import { materiaConfig } from '../config/materias';
+import { isMateriaSlug } from '../types/content';
 
 interface Props {
   frontmatter: {
@@ -28,21 +30,16 @@ const materia = pathParts[0] || '';
 const unidad = pathParts[1] || '';
 const bloque = pathParts[2] || '';
 
-// Configuración de colores por materia
-const materiaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
-  matematicas: { icon: '🧮', color: '#ef4444', gradient: 'linear-gradient(135deg, #ef4444, #dc2626)' },
-  fisica: { icon: '🚀', color: '#3b82f6', gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)' },
-  quimica: { icon: '⚛️', color: '#a855f7', gradient: 'linear-gradient(135deg, #a855f7, #9333ea)' },
-  ciencias: { icon: '🌍', color: '#22c55e', gradient: 'linear-gradient(135deg, #22c55e, #16a34a)' },
-};
-const config = materiaConfig[materia] || materiaConfig.fisica;
-const materiaName = materia.charAt(0).toUpperCase() + materia.slice(1);
+// Configuración de colores por materia (usar centralizada)
+const config = isMateriaSlug(materia) 
+  ? materiaConfig[materia] 
+  : materiaConfig.fisica;
 
 // Obtener nombres con tildes desde metadatos
 const unidadKey = `${materia}/${unidad}`;
 const bloqueKey = `${materia}/${unidad}/${bloque}`;
-const unidadName = (allMeta as any)[unidadKey]?.name || formatName(unidad);
-const bloqueName = (allMeta as any)[bloqueKey]?.name || formatBlockName(bloque);
+const unidadName = getMetaName(unidadKey, formatName(unidad));
+const bloqueName = getMetaName(bloqueKey, formatBlockName(bloque));
 ---
 
 <BaseLayout title={title} description={frontmatter.description}>
