@@ -1,0 +1,252 @@
+---
+/**
+ * Footer - Componente reutilizable
+ * variant: 'full' para página principal, 'minimal' para otras páginas
+ */
+interface Props {
+  variant?: 'full' | 'minimal';
+}
+
+const { variant = 'minimal' } = Astro.props;
+---
+
+<footer class="footer">
+  <div class="footer-bg"></div>
+  <div class="footer-content">
+    {variant === 'full' && (
+      <div class="footer-grid">
+        <div class="footer-brand-section">
+          <div class="footer-brand">
+            <div class="footer-logo-wrapper">
+              <span class="footer-logo">🎓</span>
+            </div>
+            <div class="footer-brand-text">
+              <span class="footer-name">Ediprofe</span>
+              <span class="footer-tagline">Tu guía educativa</span>
+            </div>
+          </div>
+          <p class="footer-desc">Aprende ciencias y matemáticas con lecciones estructuradas, videos explicativos y ejercicios prácticos.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@profeedi" target="_blank" rel="noopener" class="social-btn social-youtube" aria-label="YouTube">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </a>
+            <a href="https://www.tiktok.com/@ediprofe" target="_blank" rel="noopener" class="social-btn social-tiktok" aria-label="TikTok">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="footer-nav">
+          <h4 class="footer-nav-title">Materias</h4>
+          <ul class="footer-nav-list">
+            <li><a href="/matematicas">🧮 Matemáticas</a></li>
+            <li><a href="/fisica">🚀 Física</a></li>
+            <li><a href="/quimica">⚛️ Química</a></li>
+            <li><a href="/ciencias">🌍 Ciencias</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-nav">
+          <h4 class="footer-nav-title">Recursos</h4>
+          <ul class="footer-nav-list">
+            <li><a href="/#materias">Explorar lecciones</a></li>
+            <li><a href="https://www.youtube.com/@profeedi" target="_blank">Videos en YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+    )}
+    
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2025 Ediprofe. Todos los derechos reservados.</p>
+      <p class="footer-made">Hecho con 💛</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #1e3a5f 100%);
+    color: white;
+    padding: 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .footer-bg {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
+    padding-top: 2rem;
+  }
+
+  .footer-brand-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer-logo-wrapper {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+  }
+
+  .footer-logo {
+    font-size: 1.5rem;
+  }
+
+  .footer-brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-name {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .footer-desc {
+    color: rgba(255,255,255,0.7);
+    max-width: 320px;
+    line-height: 1.7;
+    font-size: 0.9375rem;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-btn {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.6);
+    transition: all 0.3s;
+  }
+
+  .social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  .social-youtube:hover {
+    background: #ff0000;
+    border-color: #ff0000;
+    color: white;
+  }
+
+  .social-tiktok:hover {
+    background: linear-gradient(135deg, #25f4ee, #fe2c55);
+    border-color: transparent;
+    color: white;
+  }
+
+  .footer-nav-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1.25rem;
+  }
+
+  .footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .footer-nav-list a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .footer-nav-list a:hover {
+    color: #fbbf24;
+    transform: translateX(4px);
+    text-decoration: none;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .footer-copyright {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .footer-made {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+  }
+</style>

@@ -1,0 +1,191 @@
+---
+/**
+ * Header/Navegación superior - Componente reutilizable
+ * ThemeToggle ahora está en TopBar (global en BaseLayout)
+ */
+---
+
+<nav class="top-nav">
+  <div class="nav-content">
+    <a href="/" class="nav-brand">
+      <span class="nav-logo">🎓</span>
+      <span class="nav-name">Ediprofe</span>
+    </a>
+    <div class="nav-actions">
+      <a href="/#materias" class="nav-link desktop-only">Materias</a>
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menú">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Menú móvil -->
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-content">
+    <a href="/#materias" class="mobile-menu-link">Materias</a>
+    <a href="/matematicas" class="mobile-menu-link">🧮 Matemáticas</a>
+    <a href="/fisica" class="mobile-menu-link">🚀 Física</a>
+    <a href="/quimica" class="mobile-menu-link">⚛️ Química</a>
+    <a href="/ciencias" class="mobile-menu-link">🌍 Ciencias</a>
+  </div>
+</div>
+
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  menuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('open');
+    menuBtn.classList.toggle('open');
+  });
+
+  // Cerrar menú al hacer clic en un enlace
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuBtn?.classList.remove('open');
+    });
+  });
+</script>
+
+<style>
+  .top-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1rem 1.5rem;
+  }
+
+  .nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+    color: white;
+  }
+
+  .nav-brand:hover {
+    text-decoration: none;
+  }
+
+  .nav-logo {
+    font-size: 1.5rem;
+  }
+
+  .nav-name {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .nav-link {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .nav-link:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
+    text-decoration: none;
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.2s;
+  }
+
+  .mobile-menu-btn:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  .mobile-menu-btn.open svg path {
+    stroke: #fbbf24;
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(12px);
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .mobile-menu-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .mobile-menu-link:hover {
+    color: #fbbf24;
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .desktop-only {
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+    }
+  }
+</style>

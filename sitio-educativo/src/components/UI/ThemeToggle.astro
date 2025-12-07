@@ -44,27 +44,22 @@
 
 <style>
   .theme-toggle {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    width: 48px;
-    height: 48px;
-    background: var(--bg-secondary);
-    border: 1px solid #e2e8f0;
-    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 1.125rem;
     transition: all 0.2s;
-    z-index: 100;
   }
 
   .theme-toggle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.05);
   }
 
   .icon-moon {
@@ -79,13 +74,14 @@
     display: block;
   }
 
-  @media (max-width: 640px) {
-    .theme-toggle {
-      bottom: 1rem;
-      right: 1rem;
-      width: 40px;
-      height: 40px;
-      font-size: 1rem;
-    }
+  :global(html.light) .theme-toggle,
+  :global(html:not(.dark)) .theme-toggle {
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.1);
+  }
+
+  :global(html.light) .theme-toggle:hover,
+  :global(html:not(.dark)) .theme-toggle:hover {
+    background: rgba(0,0,0,0.1);
   }
 </style>

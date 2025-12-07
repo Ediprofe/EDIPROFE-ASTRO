@@ -1,5 +1,5 @@
 
-# La física y sus ramas
+# **La física y sus ramas**
 
 ## ⚙️ **¿Qué es la física?**
 
@@ -27,17 +27,17 @@ La física explica el funcionamiento del mundo natural, desde lo microscópico h
 
 ---
 
-# 🧩 **Ramas de la física**
+## 🧩 **Ramas de la física**
 
 Las ramas de la física pueden organizarse en dos grandes bloques:
 
 ---
 
-## 🏛️ **1. Física clásica**
+### 🏛️ **1. Física clásica**
 
 Estudia los fenómenos que ocurren a **escala humana**, con **bajas velocidades** y en **condiciones ordinarias**.
 
-### Principales ramas de la física clásica
+#### Principales ramas de la física clásica
 
 | **Rama**              | **Qué estudia**                              | **Ejemplos**                     |
 | --------------------- | -------------------------------------------- | -------------------------------- |
@@ -49,11 +49,11 @@ Estudia los fenómenos que ocurren a **escala humana**, con **bajas velocidades*
 
 ---
 
-## 🚀 **2. Física moderna**
+### 🚀 **2. Física moderna**
 
 Surge a comienzos del siglo XX para explicar fenómenos que la física clásica no podía describir: **velocidades cercanas a la luz**, **dimensiones atómicas** y **escala cósmica**.
 
-### Principales ramas de la física moderna
+#### Principales ramas de la física moderna
 
 | **Rama**                     | **Qué estudia**                                                               | **Ejemplos**                       |
 | ---------------------------- | ----------------------------------------------------------------------------- | ---------------------------------- |
@@ -65,7 +65,7 @@ Surge a comienzos del siglo XX para explicar fenómenos que la física clásica 
 
 ---
 
-# 🔗 **Relación con otras ciencias**
+## 🔗 **Relación con otras ciencias**
 
 | **Ciencia**                 | **Relación con la física**                                                                |
 | --------------------------- | ----------------------------------------------------------------------------------------- |
@@ -76,7 +76,7 @@ Surge a comienzos del siglo XX para explicar fenómenos que la física clásica 
 
 ---
 
-# 💡 **Conclusión**
+## 💡 **Conclusión**
 
 > La física es una **ciencia fundamental** que nos permite comprender las reglas del universo,
 > desde el movimiento de una pelota hasta el comportamiento de las estrellas y partículas subatómicas.

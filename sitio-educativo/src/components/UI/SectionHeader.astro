@@ -1,0 +1,62 @@
+---
+/**
+ * Componente de encabezado de sección reutilizable
+ */
+interface Props {
+  badge?: string;
+  title: string;
+  description?: string;
+  centered?: boolean;
+}
+
+const { badge, title, description, centered = true } = Astro.props;
+---
+
+<div class:list={["section-header", { centered }]}>
+  {badge && <span class="section-badge">{badge}</span>}
+  <h2 class="section-title">{title}</h2>
+  {description && <p class="section-desc">{description}</p>}
+</div>
+
+<style>
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-header.centered {
+    text-align: center;
+  }
+
+  .section-badge {
+    display: inline-block;
+    padding: 0.375rem 1rem;
+    background: var(--color-primary, #2563eb);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 1.0625rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .section-header:not(.centered) .section-desc {
+    margin: 0;
+  }
+</style>

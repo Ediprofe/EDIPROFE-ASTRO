@@ -1,0 +1,179 @@
+---
+/**
+ * Tarjeta de materia reutilizable
+ */
+import { getMateriaConfig } from '../../config/materias';
+
+interface Props {
+  slug: string;
+  name: string;
+  lessonCount: number;
+  delay?: number;
+}
+
+const { slug, name, lessonCount, delay = 0 } = Astro.props;
+const config = getMateriaConfig(slug);
+---
+
+<a href={`/${slug}`} class={`materia-card materia-card-${slug}`} style={`--delay: ${delay}s; --accent: ${config.color}`}>
+  <div class="card-glow"></div>
+  <div class="card-content">
+    <div class="materia-header">
+      <div class="materia-icon-wrapper">
+        <span class="materia-icon">{config.icon}</span>
+      </div>
+      <div class="materia-badge">
+        <span class="lesson-count">{lessonCount}</span>
+        <span class="lesson-label">{lessonCount === 1 ? 'lección' : 'lecciones'}</span>
+      </div>
+    </div>
+    <h3 class="materia-name">{name}</h3>
+    <p class="materia-desc">{config.description}</p>
+    <div class="materia-footer">
+      <span class="explore-text">Explorar materia</span>
+      <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+  </div>
+</a>
+
+<style>
+  .materia-card {
+    position: relative;
+    display: block;
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 1.75rem;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.06);
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease-out backwards;
+    animation-delay: var(--delay);
+  }
+
+  .materia-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 20px 40px rgba(0,0,0,0.08),
+      0 0 0 1px var(--accent);
+    text-decoration: none;
+  }
+
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .materia-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .materia-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+  }
+
+  .materia-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 80%, black));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .materia-icon {
+    font-size: 1.75rem;
+  }
+
+  .materia-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: rgba(0,0,0,0.04);
+    padding: 0.5rem 0.875rem;
+    border-radius: 10px;
+  }
+
+  .lesson-count {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .lesson-label {
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .materia-name {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .materia-desc {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.25rem 0;
+    line-height: 1.5;
+  }
+
+  .materia-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .arrow-icon {
+    transition: transform 0.3s;
+  }
+
+  .materia-card:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  :global(.dark) .materia-card {
+    background: var(--bg-secondary);
+    border-color: rgba(255,255,255,0.08);
+  }
+
+  :global(.dark) .materia-badge {
+    background: rgba(255,255,255,0.06);
+  }
+</style>

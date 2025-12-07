@@ -1,4 +1,6 @@
 ---
+import TopBar from '../components/Layout/TopBar.astro';
+
 interface Props {
   title: string;
   description?: string;
@@ -11,7 +13,7 @@ interface Props {
 const { 
   title, 
   description = 'Guía educativa para ciencias y matemáticas. Lecciones estructuradas con videos explicativos, material didáctico y recursos descargables.',
-  image = '/og-image.png',
+  image = '/og-image.svg',
   type = 'website',
   publishedTime,
   modifiedTime
@@ -29,7 +31,7 @@ const structuredData = {
   "name": "Ediprofe",
   "description": description,
   "url": "https://ediprofe.com",
-  "logo": "https://ediprofe.com/logo.png",
+  "logo": "https://ediprofe.com/logo.svg",
   "sameAs": [
     "https://www.youtube.com/@profeedi",
     "https://www.tiktok.com/@ediprofe"
@@ -103,7 +105,8 @@ const structuredData = {
   <link rel="dns-prefetch" href="https://www.youtube-nocookie.com">
   
   <!-- Fonts con display swap para mejor rendimiento -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
   
   <!-- KaTeX CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
@@ -114,10 +117,9 @@ const structuredData = {
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#2563eb">
   
-  <!-- Preload crítico -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-</head>
+  </head>
 <body>
+  <TopBar />
   <slot />
 </body>
 </html>

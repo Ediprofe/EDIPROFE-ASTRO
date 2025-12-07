@@ -1,0 +1,30 @@
+---
+/**
+ * TopBar - Barra superior fija con ThemeToggle
+ * Se muestra en todas las páginas arriba a la derecha
+ */
+import ThemeToggle from '../UI/ThemeToggle.astro';
+---
+
+<div class="top-bar">
+  <ThemeToggle />
+</div>
+
+<style>
+  .top-bar {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .top-bar {
+      top: 0.75rem;
+      right: 0.75rem;
+    }
+  }
+</style>
