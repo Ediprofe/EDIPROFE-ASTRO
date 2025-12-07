@@ -35,13 +35,25 @@ try {
   navigation = mergeNavigations(navigation, navCie);
 } catch (e) {}
 
-// Íconos de materias
-const materiaIcons: Record<string, string> = {
-  matematicas: '🧮',
-  fisica: '🚀',
-  quimica: '⚛️',
-  ciencias: '🌍',
+// Configuración de materias con colores
+const materiaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
+  matematicas: { icon: '🧮', color: '#ef4444', gradient: 'linear-gradient(135deg, #ef4444, #dc2626)' },
+  fisica: { icon: '🚀', color: '#3b82f6', gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)' },
+  quimica: { icon: '⚛️', color: '#a855f7', gradient: 'linear-gradient(135deg, #a855f7, #9333ea)' },
+  ciencias: { icon: '🌍', color: '#22c55e', gradient: 'linear-gradient(135deg, #22c55e, #16a34a)' },
 };
+
+// Función para contar lecciones de una materia
+const countLessons = (materia: any) => {
+  return Object.values(materia.unidades).reduce((acc: number, unidad: any) => {
+    return acc + Object.values(unidad.bloques).reduce((acc2: number, bloque: any) => acc2 + bloque.lecciones.length, 0);
+  }, 0);
+};
+
+// Filtrar materias que tienen al menos 1 lección
+const filteredNavigation = Object.fromEntries(
+  Object.entries(navigation).filter(([_, materia]: [string, any]) => countLessons(materia) > 0)
+);
 
 // Determinar qué secciones deben estar abiertas basándose en la ruta actual
 const pathParts = currentPath.split('/').filter(Boolean);
@@ -51,95 +63,149 @@ const currentBloque = pathParts[2] || '';
 ---
 
 <aside class="sidebar">
+  <!-- Header Premium -->
   <div class="sidebar-header">
     <a href="/" class="logo">
-      <span class="logo-icon">🎓</span>
-      <span class="logo-text">Ediprofe</span>
+      <div class="logo-icon-wrapper">
+        <span class="logo-icon">🎓</span>
+      </div>
+      <div class="logo-text-wrapper">
+        <span class="logo-text">Ediprofe</span>
+        <span class="logo-tagline">Tu guía educativa</span>
+      </div>
     </a>
   </div>
   
+  <!-- Navegación Premium -->
   <nav class="sidebar-nav">
-    {Object.entries(navigation).map(([materiaKey, materia]: [string, any]) => (
-      <div class="nav-section">
-        <details open={currentMateria === materiaKey} class="nav-details materia-details">
-          <summary class="nav-section-title">
-            <span class="nav-icon">
-              {materiaIcons[materiaKey] || '📚'}
-            </span>
-            <span class="nav-text">{materia.name}</span>
-            <span class="chevron">›</span>
-          </summary>
-          
-          <div class="nav-content">
-            {Object.entries(materia.unidades).map(([unidadKey, unidad]: [string, any]) => (
-              <details open={currentUnidad === unidadKey} class="nav-details unidad-details">
-                <summary class="nav-unidad-title">
-                  <span class="nav-text">{unidad.name}</span>
-                  <span class="chevron">›</span>
-                </summary>
-                
-                <div class="nav-content">
-                  {Object.entries(unidad.bloques).map(([bloqueKey, bloque]: [string, any]) => (
-                    <details open={currentBloque === bloqueKey} class="nav-details bloque-details">
-                      <summary class="nav-bloque-title">
-                        <span class="nav-text">{bloque.name}</span>
-                        <span class="chevron">›</span>
-                      </summary>
-                      
-                      <ul class="nav-lessons">
-                        {bloque.lecciones.map((leccion: any) => (
-                          <li>
-                            <a 
-                              href={`/${leccion.slug}`}
-                              class:list={['nav-lesson-link', { active: currentPath === `/${leccion.slug}` }]}
-                            >
-                              <span class="lesson-dot"></span>
-                              {leccion.title}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  ))}
-                </div>
-              </details>
-            ))}
-          </div>
-        </details>
-      </div>
-    ))}
+    <div class="nav-label">Materias</div>
     
-    {Object.keys(navigation).length === 0 && (
+    {Object.entries(filteredNavigation).map(([materiaKey, materia]: [string, any]) => {
+      const config = materiaConfig[materiaKey] || materiaConfig.fisica;
+      const isActive = currentMateria === materiaKey;
+      const lessonCount = Object.values(materia.unidades).reduce((acc: number, unidad: any) => {
+        return acc + Object.values(unidad.bloques).reduce((acc2: number, bloque: any) => acc2 + bloque.lecciones.length, 0);
+      }, 0);
+      
+      return (
+        <div class={`nav-section nav-section-${materiaKey}`}>
+          <details open={isActive} class="nav-details materia-details">
+            <summary class="nav-materia-summary">
+              <div class="materia-icon" style={`background: ${config.gradient}`}>
+                {config.icon}
+              </div>
+              <div class="materia-info">
+                <span class="materia-name">{materia.name}</span>
+                <span class="materia-count">{lessonCount} lecciones</span>
+              </div>
+              <span class="nav-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </span>
+            </summary>
+            
+            <div class="nav-content">
+              {Object.entries(materia.unidades).map(([unidadKey, unidad]: [string, any], unidadIndex: number) => (
+                <details open={currentUnidad === unidadKey} class="nav-details unidad-details">
+                  <summary class="nav-unidad-summary">
+                    <span class="unidad-number" style={`background: ${config.gradient}`}>{unidadIndex + 1}</span>
+                    <span class="unidad-name">{unidad.name}</span>
+                    <span class="nav-chevron-small">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                      </svg>
+                    </span>
+                  </summary>
+                  
+                  <div class="nav-content-inner">
+                    {Object.entries(unidad.bloques).map(([bloqueKey, bloque]: [string, any]) => (
+                      <details open={currentBloque === bloqueKey} class="nav-details bloque-details">
+                        <summary class="nav-bloque-summary">
+                          <span class="bloque-indicator" style={`background: ${config.color}`}></span>
+                          <span class="bloque-name">{bloque.name}</span>
+                          <span class="bloque-count">{bloque.lecciones.length}</span>
+                        </summary>
+                        
+                        <ul class="nav-lessons">
+                          {bloque.lecciones.map((leccion: any, leccionIndex: number) => {
+                            const isLessonActive = currentPath === `/${leccion.slug}`;
+                            return (
+                              <li>
+                                <a 
+                                  href={`/${leccion.slug}`}
+                                  class:list={['nav-lesson-link', { active: isLessonActive }]}
+                                  style={isLessonActive ? `--accent-color: ${config.color}` : ''}
+                                >
+                                  <span class="lesson-number">{leccionIndex + 1}</span>
+                                  <span class="lesson-title">{leccion.title}</span>
+                                  {isLessonActive && <span class="lesson-active-indicator"></span>}
+                                </a>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </details>
+                    ))}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </details>
+        </div>
+      );
+    })}
+    
+    {Object.keys(filteredNavigation).length === 0 && (
       <div class="nav-empty">
-        <p>No hay contenido disponible aún.</p>
-        <p>Agrega archivos .md en <code>src/content/</code></p>
+        <div class="empty-icon">📚</div>
+        <p>No hay contenido disponible</p>
+        <code>src/content/</code>
       </div>
     )}
   </nav>
+  
+  <!-- Footer del Sidebar -->
+  <div class="sidebar-footer">
+    <a href="/" class="footer-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span>Inicio</span>
+    </a>
+  </div>
 </aside>
 
 <style>
+  /* ========================================
+     SIDEBAR PREMIUM - DISEÑO PROFESIONAL
+     ======================================== */
+  
   .sidebar {
-    width: 260px;
+    width: 280px;
     background: var(--bg-secondary);
-    border-right: 1px solid var(--border-color, #e2e8f0);
+    border-right: 1px solid var(--border-color, rgba(0,0,0,0.06));
     height: 100vh;
     position: sticky;
     top: 0;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   :global(html.dark) .sidebar {
-    border-right-color: #334155;
-    background: #0f172a;
+    border-right-color: rgba(255,255,255,0.06);
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
   }
 
+  /* ========================================
+     HEADER
+     ======================================== */
+  
   .sidebar-header {
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #0a0f1a 0%, #1e3a5f 100%);
     position: relative;
     overflow: hidden;
   }
@@ -149,16 +215,27 @@ const currentBloque = pathParts[2] || '';
     position: absolute;
     top: -50%;
     right: -30%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .sidebar-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -20%;
     width: 100px;
     height: 100px;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%);
     pointer-events: none;
   }
 
   .logo {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.875rem;
     text-decoration: none;
     color: white;
     position: relative;
@@ -169,8 +246,25 @@ const currentBloque = pathParts[2] || '';
     text-decoration: none;
   }
 
+  .logo-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
   .logo-icon {
     font-size: 1.5rem;
+  }
+
+  .logo-text-wrapper {
+    display: flex;
+    flex-direction: column;
   }
 
   .logo-text {
@@ -180,32 +274,47 @@ const currentBloque = pathParts[2] || '';
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    line-height: 1.2;
   }
 
+  .logo-tagline {
+    font-size: 0.6875rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.02em;
+  }
+
+  /* ========================================
+     NAVEGACIÓN
+     ======================================== */
+  
   .sidebar-nav {
     flex: 1;
-    padding: 0.75rem;
+    padding: 1rem;
     overflow-y: auto;
   }
 
-  .nav-section {
-    margin-bottom: 0.375rem;
+  .nav-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
-  /* Details/Summary styling */
+  .nav-section {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Details base */
   .nav-details {
-    border-radius: 8px;
+    border-radius: 12px;
   }
 
   .nav-details summary {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
     cursor: pointer;
     list-style: none;
-    padding: 0.625rem 0.875rem;
-    border-radius: 8px;
-    transition: all 0.15s;
     user-select: none;
   }
 
@@ -213,84 +322,195 @@ const currentBloque = pathParts[2] || '';
     display: none;
   }
 
-  .nav-details summary:hover {
-    background: rgba(37, 99, 235, 0.1);
+  /* ========================================
+     MATERIA LEVEL
+     ======================================== */
+  
+  .nav-materia-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color, rgba(0,0,0,0.04));
+    transition: all 0.2s;
   }
 
-  .chevron {
-    margin-left: auto;
+  :global(html.dark) .nav-materia-summary {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.06);
+  }
+
+  .nav-materia-summary:hover {
+    border-color: rgba(37, 99, 235, 0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .materia-details[open] > .nav-materia-summary {
+    border-color: rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), transparent);
+  }
+
+  .materia-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.125rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
+
+  .materia-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .materia-name {
+    display: block;
     font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .materia-count {
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+  }
+
+  .nav-chevron {
     color: var(--text-secondary);
     transition: transform 0.2s;
+    flex-shrink: 0;
   }
 
-  .nav-details[open] > summary .chevron {
+  .materia-details[open] > .nav-materia-summary .nav-chevron {
     transform: rotate(90deg);
     color: var(--color-primary);
   }
 
+  /* ========================================
+     UNIDAD LEVEL
+     ======================================== */
+  
   .nav-content {
-    padding-left: 0.875rem;
-    margin-left: 0.75rem;
-    border-left: 2px solid rgba(37, 99, 235, 0.2);
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    margin-left: 1rem;
+    border-left: 2px solid var(--border-color, rgba(0,0,0,0.06));
   }
 
   :global(html.dark) .nav-content {
-    border-left-color: rgba(59, 130, 246, 0.3);
+    border-left-color: rgba(255,255,255,0.08);
   }
 
-  /* Materia level */
-  .materia-details > summary {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.04));
-    border: 1px solid rgba(37, 99, 235, 0.1);
+  .nav-unidad-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: 8px;
+    transition: all 0.15s;
   }
 
-  :global(html.dark) .materia-details > summary {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(59, 130, 246, 0.08));
-    border-color: rgba(59, 130, 246, 0.2);
+  .nav-unidad-summary:hover {
+    background: rgba(37, 99, 235, 0.06);
   }
 
-  .materia-details[open] > summary {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(59, 130, 246, 0.08));
-    border-color: rgba(37, 99, 235, 0.2);
-  }
-
-  .nav-section-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .nav-icon {
-    font-size: 1.125rem;
-    width: 28px;
-    height: 28px;
+  .unidad-number {
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(37, 99, 235, 0.1);
     border-radius: 6px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
   }
 
-  :global(html.dark) .nav-icon {
-    background: rgba(59, 130, 246, 0.15);
-  }
-
-  /* Unidad level */
-  .nav-unidad-title {
+  .unidad-name {
+    flex: 1;
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--text-primary);
+    line-height: 1.3;
   }
 
-  /* Bloque level */
-  .nav-bloque-title {
-    font-size: 0.75rem;
-    font-weight: 500;
+  .nav-chevron-small {
     color: var(--text-secondary);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    opacity: 0.6;
   }
 
-  /* Lessons */
+  .unidad-details[open] > .nav-unidad-summary .nav-chevron-small {
+    transform: rotate(90deg);
+    opacity: 1;
+  }
+
+  /* ========================================
+     BLOQUE LEVEL
+     ======================================== */
+  
+  .nav-content-inner {
+    padding: 0.25rem 0 0.25rem 0.5rem;
+    margin-left: 0.625rem;
+    border-left: 1px solid var(--border-color, rgba(0,0,0,0.04));
+  }
+
+  :global(html.dark) .nav-content-inner {
+    border-left-color: rgba(255,255,255,0.06);
+  }
+
+  .nav-bloque-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+
+  .nav-bloque-summary:hover {
+    background: rgba(37, 99, 235, 0.04);
+  }
+
+  .bloque-indicator {
+    width: 3px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .bloque-name {
+    flex: 1;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .bloque-count {
+    font-size: 0.625rem;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    opacity: 0.8;
+  }
+
+  :global(html.dark) .bloque-count {
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* ========================================
+     LESSONS
+     ======================================== */
+  
   .nav-lessons {
     list-style: none;
     margin: 0;
@@ -298,67 +518,160 @@ const currentBloque = pathParts[2] || '';
   }
 
   .nav-lessons li {
-    margin-bottom: 0.125rem;
+    margin-bottom: 2px;
   }
 
   .nav-lesson-link {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.625rem;
     font-size: 0.8125rem;
     color: var(--text-primary);
     text-decoration: none;
-    border-radius: 6px;
-    transition: all 0.15s;
-    border-left: 2px solid transparent;
-    margin-left: -2px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
   }
 
   .nav-lesson-link:hover {
-    background: rgba(37, 99, 235, 0.08);
+    background: rgba(37, 99, 235, 0.06);
     color: var(--color-primary);
     text-decoration: none;
-    border-left-color: var(--color-primary);
   }
 
   .nav-lesson-link.active {
-    background: linear-gradient(90deg, rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.05));
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), rgba(37, 99, 235, 0.04));
     color: var(--color-primary);
     font-weight: 600;
-    border-left-color: var(--color-primary);
   }
 
-  .lesson-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--text-secondary);
+  .lesson-number {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    border-radius: 6px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: var(--text-secondary);
     flex-shrink: 0;
-    transition: all 0.15s;
+    transition: all 0.2s;
   }
 
-  .nav-lesson-link:hover .lesson-dot,
-  .nav-lesson-link.active .lesson-dot {
+  :global(html.dark) .lesson-number {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .nav-lesson-link:hover .lesson-number,
+  .nav-lesson-link.active .lesson-number {
     background: var(--color-primary);
-    box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+    color: white;
   }
 
+  .lesson-title {
+    flex: 1;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .lesson-active-indicator {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--accent-color, var(--color-primary));
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ========================================
+     EMPTY STATE
+     ======================================== */
+  
   .nav-empty {
     text-align: center;
     padding: 2rem 1rem;
     color: var(--text-secondary);
   }
 
-  .nav-empty code {
-    background: rgba(37, 99, 235, 0.1);
-    color: var(--color-primary);
-    padding: 0.2em 0.5em;
-    border-radius: 4px;
-    font-size: 0.8em;
+  .nav-empty .empty-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
   }
 
-  /* Scrollbar personalizado */
+  .nav-empty p {
+    font-size: 0.8125rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .nav-empty code {
+    display: inline-block;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-primary);
+    padding: 0.25rem 0.625rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+  }
+
+  /* ========================================
+     FOOTER
+     ======================================== */
+  
+  .sidebar-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color, rgba(0,0,0,0.06));
+    background: var(--bg-primary);
+  }
+
+  :global(html.dark) .sidebar-footer {
+    border-top-color: rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.2);
+  }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 0.875rem;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 1px solid var(--border-color, rgba(0,0,0,0.04));
+  }
+
+  :global(html.dark) .footer-link {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.06);
+  }
+
+  .footer-link:hover {
+    background: rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.2);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .footer-link svg {
+    opacity: 0.7;
+  }
+
+  /* ========================================
+     SCROLLBAR
+     ======================================== */
+  
   .sidebar-nav::-webkit-scrollbar {
     width: 6px;
   }
@@ -368,15 +681,18 @@ const currentBloque = pathParts[2] || '';
   }
 
   .sidebar-nav::-webkit-scrollbar-thumb {
-    background: rgba(37, 99, 235, 0.2);
+    background: rgba(37, 99, 235, 0.15);
     border-radius: 3px;
   }
 
   .sidebar-nav::-webkit-scrollbar-thumb:hover {
-    background: rgba(37, 99, 235, 0.3);
+    background: rgba(37, 99, 235, 0.25);
   }
 
-  /* Ocultar en móvil */
+  /* ========================================
+     RESPONSIVE
+     ======================================== */
+  
   @media (max-width: 1024px) {
     .sidebar {
       display: none;

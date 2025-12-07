@@ -29,6 +29,11 @@ export async function getStaticPaths() {
     addLessons(quimica, 'quimica');
   } catch (e) {}
   
+  try {
+    const ciencias = await getCollection('ciencias');
+    addLessons(ciencias, 'ciencias');
+  } catch (e) {}
+  
   // Ordenar lecciones por slug para navegación secuencial
   allLessons.sort((a, b) => a.fullSlug.localeCompare(b.fullSlug));
   

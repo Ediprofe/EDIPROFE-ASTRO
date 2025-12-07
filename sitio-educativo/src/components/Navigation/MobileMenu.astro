@@ -35,16 +35,29 @@ try {
   navigation = mergeNavigations(navigation, navCie);
 } catch (e) {}
 
-// Íconos de materias
-const materiaIcons: Record<string, string> = {
-  matematicas: '🧮',
-  fisica: '🚀',
-  quimica: '⚛️',
-  ciencias: '🌍',
+// Configuración de materias con colores
+const materiaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
+  matematicas: { icon: '🧮', color: '#ef4444', gradient: 'linear-gradient(135deg, #ef4444, #dc2626)' },
+  fisica: { icon: '🚀', color: '#3b82f6', gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)' },
+  quimica: { icon: '⚛️', color: '#a855f7', gradient: 'linear-gradient(135deg, #a855f7, #9333ea)' },
+  ciencias: { icon: '🌍', color: '#22c55e', gradient: 'linear-gradient(135deg, #22c55e, #16a34a)' },
 };
+
+// Función para contar lecciones de una materia
+const countLessons = (materia: any) => {
+  return Object.values(materia.unidades).reduce((acc: number, unidad: any) => {
+    return acc + Object.values(unidad.bloques).reduce((acc2: number, bloque: any) => acc2 + bloque.lecciones.length, 0);
+  }, 0);
+};
+
+// Filtrar materias que tienen al menos 1 lección
+const filteredNavigation = Object.fromEntries(
+  Object.entries(navigation).filter(([_, materia]: [string, any]) => countLessons(materia) > 0)
+);
 ---
 
 <div class="mobile-menu-container">
+  <!-- Botón de menú premium -->
   <button class="mobile-menu-toggle" aria-label="Abrir menú" id="mobile-menu-toggle">
     <span class="hamburger-icon">
       <span></span>
@@ -55,62 +68,92 @@ const materiaIcons: Record<string, string> = {
   
   <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
   
+  <!-- Menú móvil premium -->
   <nav class="mobile-menu" id="mobile-menu" aria-hidden="true">
     <div class="mobile-menu-header">
       <a href="/" class="logo">
-        <span class="logo-icon">🎓</span>
-        <span class="logo-text">Ediprofe</span>
+        <div class="logo-icon-wrapper">
+          <span class="logo-icon">🎓</span>
+        </div>
+        <div class="logo-text-wrapper">
+          <span class="logo-text">Ediprofe</span>
+          <span class="logo-tagline">Tu guía educativa</span>
+        </div>
       </a>
       <button class="mobile-menu-close" aria-label="Cerrar menú" id="mobile-menu-close">
-        ✕
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
       </button>
     </div>
     
     <div class="mobile-menu-content">
-      {Object.entries(navigation).map(([materiaKey, materia]: [string, any]) => {
-        const materiaIcon = materiaIcons[materiaKey] || '📖';
+      <div class="nav-label">Materias</div>
+      
+      {Object.entries(filteredNavigation).map(([materiaKey, materia]: [string, any]) => {
+        const config = materiaConfig[materiaKey] || materiaConfig.fisica;
         const isMateriaActive = currentPath.startsWith(`/${materiaKey}`);
+        const lessonCount = Object.values(materia.unidades).reduce((acc: number, unidad: any) => {
+          return acc + Object.values(unidad.bloques).reduce((acc2: number, bloque: any) => acc2 + bloque.lecciones.length, 0);
+        }, 0);
         
         return (
-          <details class="nav-details materia-details" open={isMateriaActive}>
-            <summary class="nav-summary materia-summary">
-              <span class="nav-icon">{materiaIcon}</span>
-              <span class="nav-text">{materia.name}</span>
-              <span class="nav-chevron">›</span>
+          <details class={`nav-details materia-details materia-${materiaKey}`} open={isMateriaActive}>
+            <summary class="nav-materia-summary">
+              <div class="materia-icon" style={`background: ${config.gradient}`}>{config.icon}</div>
+              <div class="materia-info">
+                <span class="materia-name">{materia.name}</span>
+                <span class="materia-count">{lessonCount} lecciones</span>
+              </div>
+              <span class="nav-chevron">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </span>
             </summary>
             
             <div class="nav-children">
-              {Object.entries(materia.unidades).map(([unidadKey, unidad]: [string, any]) => {
+              {Object.entries(materia.unidades).map(([unidadKey, unidad]: [string, any], unidadIndex: number) => {
                 const isUnidadActive = currentPath.includes(`/${unidadKey}`);
                 
                 return (
                   <details class="nav-details unidad-details" open={isUnidadActive}>
-                    <summary class="nav-summary unidad-summary">
-                      <span class="nav-text">{unidad.name}</span>
-                      <span class="nav-chevron">›</span>
+                    <summary class="nav-unidad-summary">
+                      <span class="unidad-number" style={`background: ${config.gradient}`}>{unidadIndex + 1}</span>
+                      <span class="unidad-name">{unidad.name}</span>
+                      <span class="nav-chevron-small">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                      </span>
                     </summary>
                     
-                    <div class="nav-children">
+                    <div class="nav-children-inner">
                       {Object.entries(unidad.bloques).map(([bloqueKey, bloque]: [string, any]) => {
                         const isBloqueActive = currentPath.includes(`/${bloqueKey}`);
                         
                         return (
                           <details class="nav-details bloque-details" open={isBloqueActive}>
-                            <summary class="nav-summary bloque-summary">
-                              <span class="nav-text">{bloque.name}</span>
-                              <span class="nav-chevron">›</span>
+                            <summary class="nav-bloque-summary">
+                              <span class="bloque-indicator" style={`background: ${config.color}`}></span>
+                              <span class="bloque-name">{bloque.name}</span>
+                              <span class="bloque-count">{bloque.lecciones.length}</span>
                             </summary>
                             
                             <ul class="nav-lessons">
-                              {bloque.lecciones.map((leccion: any) => {
+                              {bloque.lecciones.map((leccion: any, leccionIndex: number) => {
                                 const isActive = currentPath === `/${leccion.slug}` || currentPath.endsWith(leccion.slug);
                                 return (
                                   <li>
                                     <a 
                                       href={`/${leccion.slug}`}
                                       class:list={['nav-lesson', { active: isActive }]}
+                                      style={isActive ? `--accent-color: ${config.color}` : ''}
                                     >
-                                      {leccion.title}
+                                      <span class="lesson-number">{leccionIndex + 1}</span>
+                                      <span class="lesson-title">{leccion.title}</span>
+                                      {isActive && <span class="lesson-active-dot" style={`background: ${config.color}`}></span>}
                                     </a>
                                   </li>
                                 );
@@ -128,9 +171,23 @@ const materiaIcons: Record<string, string> = {
         );
       })}
       
-      {Object.keys(navigation).length === 0 && (
-        <p class="mobile-nav-empty">No hay contenido disponible.</p>
+      {Object.keys(filteredNavigation).length === 0 && (
+        <div class="mobile-nav-empty">
+          <div class="empty-icon">📚</div>
+          <p>No hay contenido disponible</p>
+        </div>
       )}
+    </div>
+    
+    <!-- Footer del menú -->
+    <div class="mobile-menu-footer">
+      <a href="/" class="footer-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Volver al inicio</span>
+      </a>
     </div>
   </nav>
 </div>
@@ -166,6 +223,10 @@ const materiaIcons: Record<string, string> = {
 </script>
 
 <style>
+  /* ========================================
+     MOBILE MENU PREMIUM
+     ======================================== */
+  
   .mobile-menu-container {
     display: none;
   }
@@ -176,42 +237,56 @@ const materiaIcons: Record<string, string> = {
     }
   }
 
+  /* ========================================
+     TOGGLE BUTTON
+     ======================================== */
+  
   .mobile-menu-toggle {
     position: fixed;
-    top: 0.75rem;
-    left: 0.75rem;
+    top: 0.875rem;
+    left: 0.875rem;
     z-index: 1000;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     background: linear-gradient(135deg, #1d4ed8, #2563eb);
     border: none;
-    border-radius: 10px;
+    border-radius: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+    transition: all 0.3s;
+  }
+
+  .mobile-menu-toggle:active {
+    transform: scale(0.95);
   }
 
   .hamburger-icon {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
   }
 
   .hamburger-icon span {
     display: block;
-    width: 20px;
-    height: 2px;
+    width: 22px;
+    height: 2.5px;
     background: white;
     border-radius: 2px;
+    transition: all 0.3s;
   }
 
+  /* ========================================
+     OVERLAY
+     ======================================== */
+  
   .mobile-menu-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(2px);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
     z-index: 1001;
     opacity: 0;
     visibility: hidden;
@@ -223,164 +298,354 @@ const materiaIcons: Record<string, string> = {
     visibility: visible;
   }
 
+  /* ========================================
+     MENU PANEL
+     ======================================== */
+  
   .mobile-menu {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    width: 300px;
-    max-width: 85vw;
+    width: 320px;
+    max-width: 90vw;
     background: var(--bg-secondary);
     z-index: 1002;
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
   }
 
   :global(html.dark) .mobile-menu {
-    background: #1e293b;
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
   }
 
   .mobile-menu.open {
     transform: translateX(0);
   }
 
+  /* ========================================
+     HEADER
+     ======================================== */
+  
   .mobile-menu-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.875rem 1rem;
-    border-bottom: 1px solid var(--border-color, #e2e8f0);
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #0a0f1a 0%, #1e3a5f 100%);
+    position: relative;
+    overflow: hidden;
   }
 
-  :global(html.dark) .mobile-menu-header {
-    border-bottom-color: #334155;
+  .mobile-menu-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+    pointer-events: none;
   }
 
   .logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     text-decoration: none;
     color: white;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo:hover {
+    text-decoration: none;
+  }
+
+  .logo-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
   }
 
   .logo-icon {
     font-size: 1.25rem;
   }
 
+  .logo-text-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
   .logo-text {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1.125rem;
+    font-weight: 800;
     background: linear-gradient(90deg, #fbbf24, #f59e0b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    line-height: 1.2;
+  }
+
+  .logo-tagline {
+    font-size: 0.625rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.02em;
   }
 
   .mobile-menu-close {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     background: rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1rem;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 1;
   }
 
+  .mobile-menu-close:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  /* ========================================
+     CONTENT
+     ======================================== */
+  
   .mobile-menu-content {
     flex: 1;
     overflow-y: auto;
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
-  /* Details/Summary styling */
+  .nav-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Details base */
   .nav-details {
-    border-radius: 6px;
-    margin-bottom: 0.25rem;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
   }
 
-  .nav-summary {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 0.75rem;
+  .nav-details summary {
     cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.15s;
     list-style: none;
+    user-select: none;
   }
 
-  .nav-summary::-webkit-details-marker {
+  .nav-details summary::-webkit-details-marker {
     display: none;
   }
 
-  .nav-summary:hover {
-    background: rgba(37, 99, 235, 0.08);
+  /* ========================================
+     MATERIA LEVEL
+     ======================================== */
+  
+  .nav-materia-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem;
+    border-radius: 14px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color, rgba(0,0,0,0.04));
+    transition: all 0.2s;
   }
 
-  .nav-icon {
-    font-size: 1rem;
+  :global(html.dark) .nav-materia-summary {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.06);
+  }
+
+  .nav-materia-summary:hover {
+    border-color: rgba(37, 99, 235, 0.3);
+  }
+
+  .materia-details[open] > .nav-materia-summary {
+    border-color: rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), transparent);
+  }
+
+  .materia-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     flex-shrink: 0;
   }
 
-  .nav-text {
+  .materia-info {
     flex: 1;
-    font-size: 0.8125rem;
+    min-width: 0;
+  }
+
+  .materia-name {
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 600;
     color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .materia-count {
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
   }
 
   .nav-chevron {
-    font-size: 0.875rem;
     color: var(--text-secondary);
     transition: transform 0.2s;
     flex-shrink: 0;
   }
 
-  .nav-details[open] > .nav-summary .nav-chevron {
+  .materia-details[open] > .nav-materia-summary .nav-chevron {
     transform: rotate(90deg);
-  }
-
-  .nav-children {
-    padding-left: 0.75rem;
-    border-left: 1px solid var(--border-color, #e2e8f0);
-    margin-left: 0.75rem;
-    margin-top: 0.25rem;
-  }
-
-  :global(html.dark) .nav-children {
-    border-left-color: #334155;
-  }
-
-  /* Materia level */
-  .materia-summary {
-    font-weight: 600;
-  }
-
-  .materia-summary .nav-text {
     color: var(--color-primary);
   }
 
-  /* Unidad level */
-  .unidad-summary .nav-text {
+  /* ========================================
+     UNIDAD LEVEL
+     ======================================== */
+  
+  .nav-children {
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    margin-left: 1.25rem;
+    border-left: 2px solid var(--border-color, rgba(0,0,0,0.06));
+  }
+
+  :global(html.dark) .nav-children {
+    border-left-color: rgba(255,255,255,0.08);
+  }
+
+  .nav-unidad-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 10px;
+    transition: all 0.15s;
+  }
+
+  .nav-unidad-summary:hover {
+    background: rgba(37, 99, 235, 0.06);
+  }
+
+  .unidad-number {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
     font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .unidad-name {
+    flex: 1;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .nav-chevron-small {
+    color: var(--text-secondary);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .unidad-details[open] > .nav-unidad-summary .nav-chevron-small {
+    transform: rotate(90deg);
+    opacity: 1;
+  }
+
+  /* ========================================
+     BLOQUE LEVEL
+     ======================================== */
+  
+  .nav-children-inner {
+    padding: 0.25rem 0 0.25rem 0.5rem;
+    margin-left: 0.75rem;
+    border-left: 1px solid var(--border-color, rgba(0,0,0,0.04));
+  }
+
+  :global(html.dark) .nav-children-inner {
+    border-left-color: rgba(255,255,255,0.06);
+  }
+
+  .nav-bloque-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: 8px;
+    transition: all 0.15s;
+  }
+
+  .nav-bloque-summary:hover {
+    background: rgba(37, 99, 235, 0.04);
+  }
+
+  .bloque-indicator {
+    width: 4px;
+    height: 16px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .bloque-name {
+    flex: 1;
+    font-size: 0.8125rem;
     color: var(--text-secondary);
     font-weight: 500;
   }
 
-  /* Bloque level */
-  .bloque-summary .nav-text {
-    font-size: 0.75rem;
+  .bloque-count {
+    font-size: 0.6875rem;
     color: var(--text-secondary);
+    background: var(--bg-primary);
+    padding: 0.125rem 0.5rem;
+    border-radius: 6px;
+    opacity: 0.8;
   }
 
-  /* Lessons */
+  :global(html.dark) .bloque-count {
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* ========================================
+     LESSONS
+     ======================================== */
+  
   .nav-lessons {
     list-style: none;
     margin: 0;
@@ -388,36 +653,158 @@ const materiaIcons: Record<string, string> = {
   }
 
   .nav-lessons li {
-    margin: 0;
+    margin-bottom: 2px;
   }
 
   .nav-lesson {
-    display: block;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8125rem;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
     color: var(--text-primary);
     text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.15s;
-    line-height: 1.3;
+    border-radius: 10px;
+    transition: all 0.2s;
+    position: relative;
   }
 
   .nav-lesson:hover {
-    background: rgba(37, 99, 235, 0.08);
+    background: rgba(37, 99, 235, 0.06);
     color: var(--color-primary);
     text-decoration: none;
   }
 
   .nav-lesson.active {
-    background: rgba(37, 99, 235, 0.12);
+    background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), rgba(37, 99, 235, 0.04));
     color: var(--color-primary);
-    font-weight: 500;
+    font-weight: 600;
   }
 
+  .lesson-number {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    border-radius: 6px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  :global(html.dark) .lesson-number {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .nav-lesson:hover .lesson-number,
+  .nav-lesson.active .lesson-number {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  .lesson-title {
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .lesson-active-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  /* ========================================
+     EMPTY STATE
+     ======================================== */
+  
   .mobile-nav-empty {
     text-align: center;
+    padding: 2rem 1rem;
     color: var(--text-secondary);
-    padding: 2rem;
+  }
+
+  .mobile-nav-empty .empty-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-nav-empty p {
     font-size: 0.875rem;
+    margin: 0;
+  }
+
+  /* ========================================
+     FOOTER
+     ======================================== */
+  
+  .mobile-menu-footer {
+    padding: 0.875rem 1rem;
+    border-top: 1px solid var(--border-color, rgba(0,0,0,0.06));
+    background: var(--bg-primary);
+  }
+
+  :global(html.dark) .mobile-menu-footer {
+    border-top-color: rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.2);
+  }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    padding: 0.875rem 1rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 1px solid var(--border-color, rgba(0,0,0,0.04));
+  }
+
+  :global(html.dark) .footer-link {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.06);
+  }
+
+  .footer-link:hover {
+    background: rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.2);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .footer-link svg {
+    opacity: 0.7;
+  }
+
+  /* ========================================
+     SCROLLBAR
+     ======================================== */
+  
+  .mobile-menu-content::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .mobile-menu-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mobile-menu-content::-webkit-scrollbar-thumb {
+    background: rgba(37, 99, 235, 0.15);
+    border-radius: 2px;
   }
 </style>
