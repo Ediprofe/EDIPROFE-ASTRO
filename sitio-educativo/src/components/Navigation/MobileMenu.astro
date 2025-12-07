@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { buildNavigationFromLessonsWithCollection, mergeNavigations } from '../../utils/navigation-generator.js';
+import { allMeta } from '../../utils/load-meta.js';
 
 interface Props {
   currentPath: string;
@@ -13,25 +14,25 @@ let navigation: any = {};
 
 try {
   const matematicas = await getCollection('matematicas');
-  const navMat = buildNavigationFromLessonsWithCollection(matematicas, 'matematicas');
+  const navMat = buildNavigationFromLessonsWithCollection(matematicas, 'matematicas', allMeta);
   navigation = mergeNavigations(navigation, navMat);
 } catch (e) {}
 
 try {
   const fisica = await getCollection('fisica');
-  const navFis = buildNavigationFromLessonsWithCollection(fisica, 'fisica');
+  const navFis = buildNavigationFromLessonsWithCollection(fisica, 'fisica', allMeta);
   navigation = mergeNavigations(navigation, navFis);
 } catch (e) {}
 
 try {
   const quimica = await getCollection('quimica');
-  const navQui = buildNavigationFromLessonsWithCollection(quimica, 'quimica');
+  const navQui = buildNavigationFromLessonsWithCollection(quimica, 'quimica', allMeta);
   navigation = mergeNavigations(navigation, navQui);
 } catch (e) {}
 
 try {
   const ciencias = await getCollection('ciencias');
-  const navCie = buildNavigationFromLessonsWithCollection(ciencias, 'ciencias');
+  const navCie = buildNavigationFromLessonsWithCollection(ciencias, 'ciencias', allMeta);
   navigation = mergeNavigations(navigation, navCie);
 } catch (e) {}
 

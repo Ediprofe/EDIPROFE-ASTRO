@@ -3,6 +3,20 @@ import { getCollection } from 'astro:content';
 import LessonLayout from '../layouts/LessonLayout.astro';
 
 export async function getStaticPaths() {
+  // Helper para extraer título del primer H1 del markdown
+  function extractTitleFromBody(body: string): string | null {
+    const match = body?.match(/^#\s+(.+)$/m);
+    if (match) {
+      // Limpiar: quitar **, emojis, y espacios extra
+      return match[1]
+        .replace(/\*\*/g, '')                    // Quitar negritas **
+        .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')  // Quitar emojis
+        .replace(/[\u{2600}-\u{26FF}]/gu, '')    // Quitar símbolos misc
+        .replace(/[\u{2700}-\u{27BF}]/gu, '')    // Quitar dingbats
+        .trim();
+    }
+    return null;
+  }
   // Obtener todas las lecciones de todas las colecciones
   const allLessons: Array<{ lesson: any; materia: string; fullSlug: string }> = [];
   
@@ -37,11 +51,28 @@ export async function getStaticPaths() {
   // Ordenar lecciones por slug para navegación secuencial
   allLessons.sort((a, b) => a.fullSlug.localeCompare(b.fullSlug));
   
-  // Crear paths con información de navegación prev/next
+  // Crear paths con información de navegación prev/next (SOLO dentro de la misma materia)
   return allLessons.map((item, index) => {
     const parts = item.lesson.slug.split('/');
-    const prevLesson = index > 0 ? allLessons[index - 1] : null;
-    const nextLesson = index < allLessons.length - 1 ? allLessons[index + 1] : null;
+    const currentMateria = item.materia;
+    
+    // Buscar lección anterior SOLO en la misma materia
+    let prevLesson = null;
+    for (let i = index - 1; i >= 0; i--) {
+      if (allLessons[i].materia === currentMateria) {
+        prevLesson = allLessons[i];
+        break;
+      }
+    }
+    
+    // Buscar lección siguiente SOLO en la misma materia
+    let nextLesson = null;
+    for (let i = index + 1; i < allLessons.length; i++) {
+      if (allLessons[i].materia === currentMateria) {
+        nextLesson = allLessons[i];
+        break;
+      }
+    }
     
     return {
       params: { 
@@ -50,16 +81,16 @@ export async function getStaticPaths() {
       props: { 
         lesson: item.lesson,
         materia: item.materia,
-        unidad: parts[0] || '',
-        bloque: parts[1] || '',
+        capitulo: parts[0] || '',  // Renombrado: unidad → capítulo
+        tema: parts[1] || '',       // Renombrado: bloque → tema
         archivo: parts[2] || '',
         prevLesson: prevLesson ? {
           slug: prevLesson.fullSlug,
-          title: prevLesson.lesson.data?.title || 'Lección anterior'
+          title: prevLesson.lesson.data?.title || extractTitleFromBody(prevLesson.lesson.body) || 'Lección anterior'
         } : null,
         nextLesson: nextLesson ? {
           slug: nextLesson.fullSlug,
-          title: nextLesson.lesson.data?.title || 'Siguiente lección'
+          title: nextLesson.lesson.data?.title || extractTitleFromBody(nextLesson.lesson.body) || 'Siguiente lección'
         } : null
       }
     };
@@ -69,8 +100,8 @@ export async function getStaticPaths() {
 interface Props {
   lesson: any;
   materia: string;
-  unidad: string;
-  bloque: string;
+  capitulo: string;  // Antes: unidad
+  tema: string;      // Antes: bloque
   archivo: string;
   prevLesson: { slug: string; title: string } | null;
   nextLesson: { slug: string; title: string } | null;
@@ -78,10 +109,27 @@ interface Props {
 
 const { lesson, prevLesson, nextLesson } = Astro.props;
 const { Content, headings } = await lesson.render();
+
+// Extraer título del primer H1 si no hay title en frontmatter
+const firstH1 = headings.find((h: any) => h.depth === 1);
+// Limpiar título: quitar negritas y emojis
+const cleanTitle = (text: string) => text
+  .replace(/\*\*/g, '')
+  .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
+  .replace(/[\u{2600}-\u{26FF}]/gu, '')
+  .replace(/[\u{2700}-\u{27BF}]/gu, '')
+  .trim();
+const title = lesson.data?.title || (firstH1?.text ? cleanTitle(firstH1.text) : 'Sin título');
+
+// Crear frontmatter extendido con el título extraído
+const extendedFrontmatter = {
+  ...lesson.data,
+  title
+};
 ---
 
 <LessonLayout 
-  frontmatter={lesson.data} 
+  frontmatter={extendedFrontmatter} 
   headings={headings} 
   url={Astro.url.pathname}
   prevLesson={prevLesson}

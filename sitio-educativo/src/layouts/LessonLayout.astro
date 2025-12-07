@@ -5,6 +5,8 @@ import Breadcrumb from '../components/Navigation/Breadcrumb.astro';
 import TableOfContents from '../components/Content/TableOfContents.astro';
 import MobileMenu from '../components/Navigation/MobileMenu.astro';
 import ThemeToggle from '../components/UI/ThemeToggle.astro';
+import { allMeta } from '../utils/load-meta.js';
+import { formatName, formatBlockName } from '../utils/navigation-generator.js';
 
 interface Props {
   frontmatter: {
@@ -35,7 +37,12 @@ const materiaConfig: Record<string, { icon: string; color: string; gradient: str
 };
 const config = materiaConfig[materia] || materiaConfig.fisica;
 const materiaName = materia.charAt(0).toUpperCase() + materia.slice(1);
-const bloqueFormatted = bloque.replace('bloque-', 'Bloque ').replace(/-/g, ' ');
+
+// Obtener nombres con tildes desde metadatos
+const unidadKey = `${materia}/${unidad}`;
+const bloqueKey = `${materia}/${unidad}/${bloque}`;
+const unidadName = (allMeta as any)[unidadKey]?.name || formatName(unidad);
+const bloqueName = (allMeta as any)[bloqueKey]?.name || formatBlockName(bloque);
 ---
 
 <BaseLayout title={title} description={frontmatter.description}>
@@ -48,18 +55,8 @@ const bloqueFormatted = bloque.replace('bloque-', 'Bloque ').replace(/-/g, ' ');
       <Breadcrumb materia={materia} unidad={unidad} bloque={bloque} />
       
       <article class={`content-article content-article-${materia}`}>
-        <!-- Header Premium -->
+        <!-- Header de lección -->
         <header class="lesson-header">
-          <div class="header-top">
-            <a href={`/${materia}`} class="back-to-materia">
-              <span class="materia-icon" style={`background: ${config.gradient}`}>{config.icon}</span>
-              <span class="materia-name">{materiaName}</span>
-            </a>
-            <div class="header-breadcrumb">
-              <span class="breadcrumb-item">{bloqueFormatted}</span>
-            </div>
-          </div>
-          
           <h1 class="lesson-title">{title}</h1>
           
           {frontmatter.description && (
@@ -214,32 +211,6 @@ const bloqueFormatted = bloque.replace('bloque-', 'Bloque ').replace(/-/g, ' ');
     font-size: 1rem;
   }
 
-  .materia-name {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .header-breadcrumb {
-    display: flex;
-    align-items: center;
-  }
-
-  .breadcrumb-item {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0.375rem 0.875rem;
-    background: var(--bg-primary);
-    border-radius: 6px;
-  }
-
-  :global(html.dark) .breadcrumb-item {
-    background: rgba(255,255,255,0.05);
-  }
-
   .lesson-title {
     color: var(--text-primary);
     font-size: 2.25rem;
@@ -261,6 +232,11 @@ const bloqueFormatted = bloque.replace('bloque-', 'Bloque ').replace(/-/g, ' ');
     font-size: 1.0625rem;
     line-height: 1.8;
     color: var(--text-primary);
+  }
+
+  /* Ocultar el primer H1 del contenido (ya se muestra en el header) */
+  :global(.content-body > h1:first-child) {
+    display: none;
   }
 
   /* Estilos para contenido */

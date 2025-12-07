@@ -6,9 +6,9 @@ export function formatName(slug) {
 }
 
 export function formatBlockName(slug) {
-  const match = slug.match(/^bloque-(\d+)-(.+)$/);
+  const match = slug.match(/^(\d+)-(.+)$/);
   if (match) {
-    return `Bloque ${match[1]}: ${formatName(match[2])}`;
+    return formatName(match[2]);
   }
   return formatName(slug);
 }
@@ -20,11 +20,60 @@ export function extractOrder(filename) {
 
 export function extractTitleFromContent(content) {
   const match = content.match(/^#\s+(.+)$/m);
-  return match ? match[1] : 'Sin título';
+  if (match) {
+    // Limpiar: quitar **, emojis, y espacios extra
+    return match[1]
+      .replace(/\*\*/g, '')                              // Quitar negritas **
+      .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')            // Quitar emojis
+      .replace(/[\u{2600}-\u{26FF}]/gu, '')              // Quitar símbolos misc
+      .replace(/[\u{2700}-\u{27BF}]/gu, '')              // Quitar dingbats
+      .trim();
+  }
+  return 'Sin título';
 }
 
-export function buildNavigationFromLessonsWithCollection(lessons, collectionName) {
+// Cache para metadatos de carpetas
+const metaCache = new Map();
+
+export async function getMetaForPath(basePath, collectionName, unidad, bloque = null) {
+  const pathKey = bloque 
+    ? `${collectionName}/${unidad}/${bloque}`
+    : `${collectionName}/${unidad}`;
+  
+  if (metaCache.has(pathKey)) {
+    return metaCache.get(pathKey);
+  }
+  
+  try {
+    // Intentar importar el _meta.json dinámicamente
+    const metaPath = bloque
+      ? `../content/${collectionName}/${unidad}/${bloque}/_meta.json`
+      : `../content/${collectionName}/${unidad}/_meta.json`;
+    
+    // Para Astro, usamos import.meta.glob
+    const meta = { name: bloque ? formatBlockName(bloque) : formatName(unidad) };
+    metaCache.set(pathKey, meta);
+    return meta;
+  } catch {
+    const fallback = { name: bloque ? formatBlockName(bloque) : formatName(unidad) };
+    metaCache.set(pathKey, fallback);
+    return fallback;
+  }
+}
+
+export function buildNavigationFromLessonsWithCollection(lessons, collectionName, metaData = {}) {
   const navigation = {};
+  
+  // metaData estructura: { "unidad-slug": { name: "Nombre" }, "unidad-slug/bloque-slug": { name: "Nombre" } }
+  const getUnidadName = (unidadSlug) => {
+    const key = `${collectionName}/${unidadSlug}`;
+    return metaData[key]?.name || formatName(unidadSlug);
+  };
+  
+  const getBloqueName = (unidadSlug, bloqueSlug) => {
+    const key = `${collectionName}/${unidadSlug}/${bloqueSlug}`;
+    return metaData[key]?.name || formatBlockName(bloqueSlug);
+  };
   
   lessons.forEach(lesson => {
     const parts = lesson.slug.split('/');
@@ -45,7 +94,7 @@ export function buildNavigationFromLessonsWithCollection(lessons, collectionName
     
     if (!navigation[materia].unidades[unidad]) {
       navigation[materia].unidades[unidad] = {
-        name: formatName(unidad),
+        name: getUnidadName(unidad),
         slug: `${materia}/${unidad}`,
         bloques: {}
       };
@@ -53,7 +102,7 @@ export function buildNavigationFromLessonsWithCollection(lessons, collectionName
     
     if (!navigation[materia].unidades[unidad].bloques[bloque]) {
       navigation[materia].unidades[unidad].bloques[bloque] = {
-        name: formatBlockName(bloque),
+        name: getBloqueName(unidad, bloque),
         slug: `${materia}/${unidad}/${bloque}`,
         lecciones: []
       };

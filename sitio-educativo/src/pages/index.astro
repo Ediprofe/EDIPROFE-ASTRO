@@ -4,6 +4,7 @@ import LessonCard from '../components/Content/LessonCard.astro';
 import ThemeToggle from '../components/UI/ThemeToggle.astro';
 import { getCollection } from 'astro:content';
 import { buildNavigationFromLessonsWithCollection, mergeNavigations } from '../utils/navigation-generator.js';
+import { allMeta } from '../utils/load-meta.js';
 
 // Obtener navegación de cada colección
 let navigation: any = {};
@@ -11,28 +12,28 @@ let allLessonsWithMateria: any[] = [];
 
 try {
   const matematicas = await getCollection('matematicas');
-  const navMat = buildNavigationFromLessonsWithCollection(matematicas, 'matematicas');
+  const navMat = buildNavigationFromLessonsWithCollection(matematicas, 'matematicas', allMeta);
   navigation = mergeNavigations(navigation, navMat);
   matematicas.forEach(l => allLessonsWithMateria.push({ ...l, materia: 'matematicas' }));
 } catch (e) {}
 
 try {
   const fisica = await getCollection('fisica');
-  const navFis = buildNavigationFromLessonsWithCollection(fisica, 'fisica');
+  const navFis = buildNavigationFromLessonsWithCollection(fisica, 'fisica', allMeta);
   navigation = mergeNavigations(navigation, navFis);
   fisica.forEach(l => allLessonsWithMateria.push({ ...l, materia: 'fisica' }));
 } catch (e) {}
 
 try {
   const quimica = await getCollection('quimica');
-  const navQui = buildNavigationFromLessonsWithCollection(quimica, 'quimica');
+  const navQui = buildNavigationFromLessonsWithCollection(quimica, 'quimica', allMeta);
   navigation = mergeNavigations(navigation, navQui);
   quimica.forEach(l => allLessonsWithMateria.push({ ...l, materia: 'quimica' }));
 } catch (e) {}
 
 try {
   const ciencias = await getCollection('ciencias');
-  const navCie = buildNavigationFromLessonsWithCollection(ciencias, 'ciencias');
+  const navCie = buildNavigationFromLessonsWithCollection(ciencias, 'ciencias', allMeta);
   navigation = mergeNavigations(navigation, navCie);
   ciencias.forEach(l => allLessonsWithMateria.push({ ...l, materia: 'ciencias' }));
 } catch (e) {}
@@ -199,28 +200,6 @@ const materiaIcons: Record<string, string> = {
           </div>
         </section>
       )}
-
-      {materias.length > 0 && (
-        <section class="recent-section" id="recientes">
-          <div class="section-header">
-            <span class="section-badge">Recientes</span>
-            <h2 class="section-title">Últimas Lecciones</h2>
-            <p class="section-desc">Continúa donde lo dejaste o descubre nuevo contenido</p>
-          </div>
-          <div class="lessons-grid">
-            {allLessonsWithMateria.slice(0, 6).map((lesson: any, index: number) => {
-              return (
-                <LessonCard 
-                  title={lesson.data?.title || 'Sin título'}
-                  description={lesson.data?.description}
-                  href={`/${lesson.materia}/${lesson.slug}`}
-                  materia={lesson.materia}
-                />
-              );
-            })}
-          </div>
-        </section>
-      )}
     </main>
 
     <footer class="footer">
@@ -242,7 +221,6 @@ const materiaIcons: Record<string, string> = {
           <p class="footer-copyright">© 2025 Ediprofe. Todos los derechos reservados.</p>
           <div class="footer-links">
             <a href="#materias">Materias</a>
-            <a href="#recientes">Lecciones</a>
           </div>
         </div>
       </div>
