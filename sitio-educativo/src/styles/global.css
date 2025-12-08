@@ -124,3 +124,85 @@ html.dark {
 .skip-link:focus {
   top: 0;
 }
+
+/* ========================================
+   GOOGLE DRIVE LINK - ESTILO PREMIUM
+   Selector CSS que detecta automáticamente links de Drive
+   ======================================== */
+
+a[href*="drive.google.com"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 1rem 1.25rem !important;
+  margin: 0.5rem 0 !important;
+  background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%) !important;
+  border: 2px solid #a5b4fc !important;
+  border-radius: 14px !important;
+  text-decoration: none !important;
+  color: #1e1b4b !important;
+  font-weight: 600 !important;
+  font-size: 0 !important; /* Oculta el texto del link */
+  transition: all 0.25s ease !important;
+}
+
+a[href*="drive.google.com"]::before {
+  content: '';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  border-radius: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.71 3.5L1.15 15l3.43 6 6.55-11.5L7.71 3.5zm1.42 0l3.43 6H20l-3.43-6H9.13zm11.44 7H12l-3.43 6h8.57l3.43-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px;
+}
+
+a[href*="drive.google.com"]::after {
+  content: 'Abrir en Drive  ↗';
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e1b4b;
+}
+
+a[href*="drive.google.com"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+  border-color: #818cf8 !important;
+  text-decoration: none !important;
+}
+
+html.dark a[href*="drive.google.com"] {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
+  border-color: #4f46e5 !important;
+}
+
+html.dark a[href*="drive.google.com"]::after {
+  color: #e0e7ff;
+}
+
+html.dark a[href*="drive.google.com"]:hover {
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+  border-color: #6366f1 !important;
+}
+
+@media (max-width: 640px) {
+  a[href*="drive.google.com"] {
+    padding: 0.875rem 1rem !important;
+  }
+
+  a[href*="drive.google.com"]::before {
+    width: 38px;
+    height: 38px;
+    background-size: 20px;
+  }
+
+  a[href*="drive.google.com"]::after {
+    font-size: 0.9375rem;
+  }
+}
