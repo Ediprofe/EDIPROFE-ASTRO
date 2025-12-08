@@ -6,6 +6,7 @@ import remarkBreaks from 'remark-breaks';
 import rehypeKatex from 'rehype-katex';
 import rehypeExternalLinks from 'rehype-external-links';
 import { youtubeAutoEmbed } from './src/plugins/youtube-auto-embed.js';
+import tableWrapper from './src/plugins/table-wrapper.js';
 
 export default defineConfig({
   site: 'https://ediprofe.com',
@@ -52,7 +53,8 @@ export default defineConfig({
       [rehypeExternalLinks, {
         target: '_blank',
         rel: ['noopener', 'noreferrer']
-      }]
+      }],
+      tableWrapper
     ],
     smartypants: false,
     gfm: true,

@@ -258,6 +258,13 @@
   margin-top: 1rem;
 }
 
+/* Ocultar breadcrumb del header en móvil (ya está en StickyHeader) */
+@media (max-width: 1024px) {
+  .header-breadcrumb {
+    display: none;
+  }
+}
+
 .crumb-link {
   display: inline-flex;
   align-items: center;

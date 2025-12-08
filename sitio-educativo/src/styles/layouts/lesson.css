@@ -225,7 +225,7 @@
   line-height: 1.5;
 }
 
-/* Breadcrumb integrado en header */
+/* Breadcrumb integrado en header - oculto en móvil (ya está en StickyHeader) */
 .header-breadcrumb {
   display: flex;
   align-items: center;
@@ -236,6 +236,12 @@
   backdrop-filter: blur(8px);
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.08);
+}
+
+@media (max-width: 1024px) {
+  .header-breadcrumb {
+    display: none;
+  }
 }
 
 .crumb-link {
@@ -271,6 +277,9 @@
   line-height: 1.8;
   color: var(--text-primary);
   letter-spacing: -0.008em;
+  /* Evitar desbordamiento horizontal */
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Ocultar el primer H1 del contenido (ya se muestra en el header) */
@@ -327,11 +336,38 @@
   background: linear-gradient(90deg, transparent, #334155, transparent);
 }
 
-/* Tablas - diseño mejorado */
-:global(.content-body .table-wrapper) {
+/* Tablas - diseño mejorado con scroll horizontal */
+:global(.content-body .table-wrapper),
+:global(.content-body .table-scroll-wrapper) {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin: 2rem 0;
   max-width: 100%;
+  /* Evitar que el scroll afecte el layout de la página */
+  overscroll-behavior-x: contain;
+}
+
+/* Indicador visual de scroll en móvil */
+:global(.content-body .table-scroll-wrapper) {
+  position: relative;
+}
+
+:global(.content-body .table-scroll-wrapper)::after {
+  content: '← Desliza →';
+  display: none;
+  position: absolute;
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  :global(.content-body .table-scroll-wrapper)::after {
+    display: block;
+  }
 }
 
 :global(.content-body table) {

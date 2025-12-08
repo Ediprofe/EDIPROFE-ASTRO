@@ -2,13 +2,14 @@
 // Componente para alternar entre modo claro y oscuro
 ---
 
-<button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema">
+<button class="theme-toggle" aria-label="Alternar tema">
   <span class="icon-sun">☀️</span>
   <span class="icon-moon">🌙</span>
 </button>
 
 <script>
-  const toggle = document.getElementById('theme-toggle');
+  // Seleccionar TODOS los toggles de tema en la página
+  const toggles = document.querySelectorAll('.theme-toggle');
   const html = document.documentElement;
   
   // Función para aplicar el tema
@@ -34,11 +35,14 @@
     applyTheme('light');
   }
   
-  toggle?.addEventListener('click', () => {
-    const isDark = html.classList.contains('dark');
-    const newTheme = isDark ? 'light' : 'dark';
-    applyTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+  // Agregar evento a TODOS los toggles
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      const newTheme = isDark ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
   });
 </script>
 

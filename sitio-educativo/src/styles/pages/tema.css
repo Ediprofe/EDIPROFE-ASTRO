@@ -214,7 +214,7 @@
   background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.25), transparent);
 }
 
-/* Breadcrumb integrado en header */
+/* Breadcrumb integrado en header - oculto en móvil (ya está en StickyHeader) */
 .header-breadcrumb {
   display: flex;
   align-items: center;
@@ -226,6 +226,12 @@
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.08);
   margin-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .header-breadcrumb {
+    display: none;
+  }
 }
 
 .crumb-link {
