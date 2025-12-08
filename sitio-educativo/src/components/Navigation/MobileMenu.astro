@@ -97,7 +97,7 @@ const filteredNavigation = Object.fromEntries(
         
         return (
           <details class={`nav-details materia-details materia-${materiaKey}`} open={isMateriaActive}>
-            <summary class="nav-materia-summary">
+            <summary class={`nav-materia-summary ${isMateriaActive ? 'active' : ''}`}>
               <div class="materia-icon" style={`background: ${config.gradient}`}>{config.icon}</div>
               <div class="materia-info">
                 <span class="materia-name">{materia.name}</span>
@@ -116,7 +116,7 @@ const filteredNavigation = Object.fromEntries(
                 
                 return (
                   <details class="nav-details unidad-details" open={isUnidadActive}>
-                    <summary class="nav-unidad-summary">
+                    <summary class={`nav-unidad-summary ${isUnidadActive ? 'active' : ''}`}>
                       <span class="unidad-number" style={`background: ${config.gradient}`}>{unidadIndex + 1}</span>
                       <span class="unidad-name">{unidad.name}</span>
                       <span class="nav-chevron-small">
@@ -131,8 +131,8 @@ const filteredNavigation = Object.fromEntries(
                         const isBloqueActive = currentPath.includes(`/${bloqueKey}`);
                         
                         return (
-                          <details class="nav-details bloque-details" open={isBloqueActive}>
-                            <summary class="nav-bloque-summary">
+                          <details class="nav-details bloque-details">
+                            <summary class={`nav-bloque-summary ${isBloqueActive ? 'active' : ''}`}>
                               <span class="bloque-indicator" style={`background: ${config.color}`}></span>
                               <span class="bloque-name">{bloque.name}</span>
                               <span class="bloque-count">{bloque.lecciones.length}</span>
@@ -176,17 +176,7 @@ const filteredNavigation = Object.fromEntries(
       )}
     </div>
     
-    <!-- Footer del menú -->
-    <div class="mobile-menu-footer">
-      <a href="/" class="footer-link">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-        <span>Volver al inicio</span>
-      </a>
-    </div>
-  </nav>
+    </nav>
 </div>
 
 <script>

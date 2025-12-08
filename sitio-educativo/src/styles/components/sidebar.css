@@ -517,6 +517,37 @@
 }
 
 /* ========================================
+   ACTIVE STATES
+   ======================================== */
+
+.nav-materia-summary.active {
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 12px;
+}
+
+.nav-materia-summary.active .materia-name {
+  color: var(--color-primary);
+}
+
+.nav-unidad-summary.active {
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.nav-unidad-summary.active .unidad-name {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.nav-bloque-summary.active {
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.nav-bloque-summary.active .bloque-name {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ========================================
    RESPONSIVE
    ======================================== */
 

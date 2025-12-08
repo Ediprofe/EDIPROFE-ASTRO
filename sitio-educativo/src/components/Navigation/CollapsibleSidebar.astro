@@ -57,6 +57,11 @@ const pathParts = currentPath.split('/').filter(Boolean);
 const currentMateria = pathParts[0] || '';
 const currentUnidad = pathParts[1] || '';
 const currentBloque = pathParts[2] || '';
+
+// Funciones helper para determinar si una sección está activa
+const isMateriaActive = (materiaKey: string) => currentPath.startsWith(`/${materiaKey}`);
+const isUnidadActive = (unidadKey: string) => currentPath.includes(`/${unidadKey}`);
+const isBloqueActive = (bloqueKey: string) => currentPath.includes(`/${bloqueKey}`);
 ---
 
 <aside class="sidebar">
@@ -79,7 +84,7 @@ const currentBloque = pathParts[2] || '';
     
     {Object.entries(filteredNavigation).map(([materiaKey, materia]: [string, any]) => {
       const config = getMateriaConfig(materiaKey);
-      const isActive = currentMateria === materiaKey;
+      const isActive = isMateriaActive(materiaKey);
       const lessonCount = Object.values(materia.unidades).reduce((acc: number, unidad: any) => {
         return acc + Object.values(unidad.bloques).reduce((acc2: number, bloque: any) => acc2 + bloque.lecciones.length, 0);
       }, 0);
@@ -87,7 +92,7 @@ const currentBloque = pathParts[2] || '';
       return (
         <div class={`nav-section nav-section-${materiaKey}`}>
           <details open={isActive} class="nav-details materia-details">
-            <summary class="nav-materia-summary">
+            <summary class={`nav-materia-summary ${isActive ? 'active' : ''}`}>
               <div class="materia-icon" style={`background: ${config.gradient}`}>
                 {config.icon}
               </div>
@@ -103,9 +108,11 @@ const currentBloque = pathParts[2] || '';
             </summary>
             
             <div class="nav-content">
-              {Object.entries(materia.unidades).map(([unidadKey, unidad]: [string, any], unidadIndex: number) => (
-                <details open={currentUnidad === unidadKey} class="nav-details unidad-details">
-                  <summary class="nav-unidad-summary">
+              {Object.entries(materia.unidades).map(([unidadKey, unidad]: [string, any], unidadIndex: number) => {
+                const unidadActive = isUnidadActive(unidadKey);
+                return (
+                <details open={unidadActive} class="nav-details unidad-details">
+                  <summary class={`nav-unidad-summary ${unidadActive ? 'active' : ''}`}>
                     <span class="unidad-number" style={`background: ${config.gradient}`}>{unidadIndex + 1}</span>
                     <span class="unidad-name">{unidad.name}</span>
                     <span class="nav-chevron-small">
@@ -116,9 +123,11 @@ const currentBloque = pathParts[2] || '';
                   </summary>
                   
                   <div class="nav-content-inner">
-                    {Object.entries(unidad.bloques).map(([bloqueKey, bloque]: [string, any]) => (
-                      <details open={currentBloque === bloqueKey} class="nav-details bloque-details">
-                        <summary class="nav-bloque-summary">
+                    {Object.entries(unidad.bloques).map(([bloqueKey, bloque]: [string, any]) => {
+                      const bloqueActive = isBloqueActive(bloqueKey);
+                      return (
+                      <details class="nav-details bloque-details">
+                        <summary class={`nav-bloque-summary ${bloqueActive ? 'active' : ''}`}>
                           <span class="bloque-indicator" style={`background: ${config.color}`}></span>
                           <span class="bloque-name">{bloque.name}</span>
                           <span class="bloque-count">{bloque.lecciones.length}</span>
@@ -126,7 +135,7 @@ const currentBloque = pathParts[2] || '';
                         
                         <ul class="nav-lessons">
                           {bloque.lecciones.map((leccion: any, leccionIndex: number) => {
-                            const isLessonActive = currentPath === `/${leccion.slug}`;
+                            const isLessonActive = currentPath === `/${leccion.slug}` || currentPath.endsWith(leccion.slug);
                             return (
                               <li>
                                 <a 
@@ -143,10 +152,10 @@ const currentBloque = pathParts[2] || '';
                           })}
                         </ul>
                       </details>
-                    ))}
+                    )})}
                   </div>
                 </details>
-              ))}
+              )})}
             </div>
           </details>
         </div>
@@ -162,17 +171,7 @@ const currentBloque = pathParts[2] || '';
     )}
   </nav>
   
-  <!-- Footer del Sidebar -->
-  <div class="sidebar-footer">
-    <a href="/" class="footer-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-      <span>Inicio</span>
-    </a>
-  </div>
-</aside>
+  </aside>
 
 <style>
   @import '../../styles/components/sidebar.css';

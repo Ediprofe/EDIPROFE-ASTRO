@@ -605,3 +605,34 @@
   background: rgba(37, 99, 235, 0.15);
   border-radius: 2px;
 }
+
+/* ========================================
+   ACTIVE STATES
+   ======================================== */
+
+.mobile-menu .nav-materia-summary.active {
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 12px;
+}
+
+.mobile-menu .nav-materia-summary.active .materia-name {
+  color: var(--color-primary);
+}
+
+.mobile-menu .nav-unidad-summary.active {
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.mobile-menu .nav-unidad-summary.active .unidad-name {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.mobile-menu .nav-bloque-summary.active {
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.mobile-menu .nav-bloque-summary.active .bloque-name {
+  color: var(--color-primary);
+  font-weight: 600;
+}

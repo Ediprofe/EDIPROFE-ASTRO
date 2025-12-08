@@ -35,10 +35,10 @@ export const materiaConfig: Record<MateriaSlug, MateriaConfig> = {
   },
   quimica: {
     name: 'Química',
-    icon: '⚛️',
-    color: '#a855f7',
-    gradient: 'linear-gradient(135deg, #a855f7, #9333ea)',
-    lightBg: 'rgba(168, 85, 247, 0.1)',
+    icon: '🧪',
+    color: '#ea580c',
+    gradient: 'linear-gradient(135deg, #f97316, #ea580c)',
+    lightBg: 'rgba(249, 115, 22, 0.1)',
     description: 'Química general y orgánica'
   },
   ciencias: {
