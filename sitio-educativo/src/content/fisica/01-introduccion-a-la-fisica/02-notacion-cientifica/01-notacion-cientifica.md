@@ -105,7 +105,5 @@ $$
 
 ## 🧾 **Conclusión**
 
-La **notación científica** simplifica el trabajo con números extremos,  
-manteniendo el número base entre **1 y 9** y expresando la escala mediante potencias de diez.  
-Esto permite **mayor claridad, precisión y uniformidad** en los resultados,  
-preparando el camino para el estudio de las **cifras significativas** y la **precisión experimental**.
+La **notación científica** simplifica el trabajo con números extremos, manteniendo el número base entre **1 y 9** y expresando la escala mediante potencias de diez.  
+Esto permite **mayor claridad, precisión y uniformidad** en los resultados,   preparando el camino para el estudio de las **cifras significativas** y la **precisión experimental**.

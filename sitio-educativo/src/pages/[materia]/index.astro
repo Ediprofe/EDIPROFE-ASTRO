@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Footer from '../../components/Layout/Footer.astro';
 import MobileMenu from '../../components/Navigation/MobileMenu.astro';
 import CollapsibleSidebar from '../../components/Navigation/CollapsibleSidebar.astro';
-import { formatName, formatBlockName, cleanSegment } from '../../utils/navigation-generator.js';
+import { formatName, formatBlockName, cleanSegment, cleanSlug } from '../../utils/navigation-generator.js';
 import { getMateriaName } from '../../config/materias';
 import { getMetaName as getMetaNameFromStore } from '../../utils/load-meta';
 import { getLessonsByMateria, groupLessonsByCapituloAndTema } from '../../utils/content-helpers';
@@ -28,10 +28,12 @@ const lessons = await getLessonsByMateria(materia);
 const materiaName = getMateriaName(materia);
 
 // Helper para obtener nombre de unidad/bloque desde metadatos
+// Las claves en el store están limpias (sin prefijos numéricos) y en minúsculas
 const getMetaName = (unidadSlug: string, bloqueSlug?: string): string => {
+  const cleanUnidad = cleanSegment(unidadSlug).toLowerCase();
   const key = bloqueSlug 
-    ? `${materia}/${unidadSlug}/${bloqueSlug}`
-    : `${materia}/${unidadSlug}`;
+    ? `${materia}/${cleanUnidad}/${cleanSegment(bloqueSlug).toLowerCase()}`
+    : `${materia}/${cleanUnidad}`;
   const fallback = bloqueSlug ? formatBlockName(bloqueSlug) : formatName(unidadSlug);
   return getMetaNameFromStore(key, fallback);
 };
