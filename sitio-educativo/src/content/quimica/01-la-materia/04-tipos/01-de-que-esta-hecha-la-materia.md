@@ -47,3 +47,7 @@ Estas combinaciones producen sustancias nuevas con propiedades propias.
   Dos átomos de hierro + tres de oxígeno
 
 La mayoría de las sustancias de la naturaleza son **compuestos**.
+
+https://youtu.be/eFAAdk2kagI
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBpvdTxp/)

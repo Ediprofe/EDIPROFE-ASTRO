@@ -23,3 +23,7 @@ Para realizar este proceso se emplea un **tamiz o colador**, cuyo material puede
 
 * Las **partículas pequeñas** atraviesan los orificios del tamiz.
 * Las **partículas grandes** permanecen **retenidas** en la parte superior.
+
+https://youtu.be/ZB3H8VlNBWY
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJDCbPR/)

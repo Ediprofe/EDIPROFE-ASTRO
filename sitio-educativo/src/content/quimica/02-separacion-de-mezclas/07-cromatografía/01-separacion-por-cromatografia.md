@@ -44,3 +44,7 @@ Si el **alcohol arrastra más rápido el color azul**, significa que:
 
 * **Identificar** los componentes de una mezcla.
 * **Observar visualmente** cómo se separan y se distribuyen en el papel.
+
+https://youtu.be/IOPG9Qflci0
+
+[Ver en Tiktok](Ver en Tiktok)

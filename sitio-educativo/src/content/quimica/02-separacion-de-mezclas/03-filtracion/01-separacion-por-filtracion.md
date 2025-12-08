@@ -23,3 +23,8 @@ Para realizar la filtración se emplea un **filtro** elaborado con **papel, tela
 
 * El **líquido** atraviesa el filtro y se recoge en un recipiente.
 * El **sólido** queda **retenido** en el material filtrante.
+
+
+https://youtu.be/ugGqsxTNGnM
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJDkqwh/)

@@ -39,3 +39,7 @@ Al calentar la mezcla, **el líquido con menor punto de ebullición se vaporiza 
 
 * El **alcohol** queda **recuperado en otro recipiente**.
 * El **agua** permanece en el **recipiente original**.
+
+https://youtu.be/e30igE4CNdA
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJDCUJ9/)

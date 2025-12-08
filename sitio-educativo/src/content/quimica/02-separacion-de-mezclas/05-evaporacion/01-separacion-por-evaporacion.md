@@ -32,3 +32,7 @@ el líquido hierve y se transforma en vapor, mientras que el sólido permanece e
 * Se **aplica calor** a la mezcla.
 * El **líquido se evapora**, pasando al estado gaseoso.
 * El **sólido permanece en el recipiente**, permitiendo su recuperación.
+
+https://youtu.be/cveN7g7CEOs
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJDSyJo/)

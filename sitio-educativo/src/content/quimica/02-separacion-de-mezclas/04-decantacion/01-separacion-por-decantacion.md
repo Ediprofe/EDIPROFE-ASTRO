@@ -38,3 +38,7 @@ Para realizar la decantación se utiliza un **embudo de decantación**, que perm
 * Se **agregan los líquidos** en el embudo de decantación.
 * Se **abre la válvula inferior** para dejar salir únicamente el **líquido más denso**.
 * El **líquido menos denso** permanece en el embudo hasta que sea el momento de separarlo.
+
+https://youtu.be/o-9FgONyDc0
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJD5k4q/)

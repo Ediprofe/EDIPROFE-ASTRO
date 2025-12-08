@@ -76,3 +76,6 @@ Cada sustancia mantiene su identidad, aunque se combinen.
 * **Formación de mezclas** → proceso físico (los componentes se unen sin reaccionar)
 * **Formación de compuestos** → proceso químico (se crean sustancias nuevas con fórmulas diferentes)
 
+https://youtu.be/6BF31Hrphng
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBpvDwev/)

@@ -38,3 +38,11 @@ La **conductividad eléctrica** es la capacidad de un material para **permitir e
 
 El **agua de mar contiene sal NaCl**.
 Al disolverse, forma **iones cargados** que **aumentan la conductividad eléctrica**.
+
+---
+
+https://youtu.be/7k8uM22GIX4
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBp7CGb3/)
+
+--- 

@@ -24,3 +24,7 @@ Las propiedades de la materia se clasifican en extensivas o intensivas según si
 * temperatura
 * conductividad
 * densidad
+
+https://youtu.be/pXHnvzJfsjk
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBp7Q5CQ/)

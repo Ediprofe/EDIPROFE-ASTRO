@@ -1,4 +1,4 @@
-# **Propiedades de la materia**
+# **Propiedades cualitativas y cuantitativas**
 
 Las **propiedades de la materia** se dividen en dos grandes grupos: **Cualitativas** y **Cuantitativas**
 
@@ -35,3 +35,8 @@ Las **propiedades de la materia** se dividen en dos grandes grupos: **Cualitativ
 | Densidad      |     1     |    $\mathrm{g/L}$   |
 | Temperatura   |    36.3   | $\mathrm{^\circ C}$ |
 | Conductividad |    500    | $\mathrm{\mu S/cm}$ |
+
+
+https://youtu.be/tDBfaewlmFs
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBp7Grrr/)

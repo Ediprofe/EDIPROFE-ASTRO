@@ -6,7 +6,7 @@ A continuación se presentan varios casos donde debes **analizar la cantidad de 
 
 ## **Ejercicio 1**
 
-| Propiedad                 | Valor/Clasificación |
+| Campo                     | Valor               |
 | ------------------------- | ------------------- |
 | **Protones (Z)**          | 13                  |
 | **Electrones (e⁻)**       | 10                  |
@@ -19,7 +19,7 @@ A continuación se presentan varios casos donde debes **analizar la cantidad de 
 
 ## **Ejercicio 2**
 
-| Propiedad                 | Valor/Clasificación |
+| Campo                     | Valor               |
 | ------------------------- | ------------------- |
 | **Protones (Z)**          | 16                  |
 | **Electrones (e⁻)**       | 18                  |
@@ -32,7 +32,7 @@ A continuación se presentan varios casos donde debes **analizar la cantidad de 
 
 ## **Ejercicio 3**
 
-| Propiedad                 | Valor/Clasificación |
+| Campo                     | Valor               |
 | ------------------------- | ------------------- |
 | **Protones (Z)**          | 20                  |
 | **Electrones (e⁻)**       | 18                  |
@@ -45,7 +45,7 @@ A continuación se presentan varios casos donde debes **analizar la cantidad de 
 
 ## **Ejercicio 4**
 
-| Propiedad                 | Valor/Clasificación |
+| Campos                    | Valor               |
 | ------------------------- | ------------------- |
 | **Protones (Z)**          | 10                  |
 | **Electrones (e⁻)**       | 10                  |
@@ -53,3 +53,9 @@ A continuación se presentan varios casos donde debes **analizar la cantidad de 
 | **Clasificación del ion** |                     |
 | **Carga**                 |                     |
 | **Elemento**              |                     |
+
+---
+
+https://youtu.be/1dJPk9jfq8U
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJPGVK7/)

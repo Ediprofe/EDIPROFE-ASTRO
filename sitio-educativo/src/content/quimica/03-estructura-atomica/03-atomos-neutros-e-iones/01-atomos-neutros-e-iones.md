@@ -1,9 +1,6 @@
-# **Clasificación de los átomos según su carga**
+# **Atomos neutros e iones**
 
-## Base de clasificación
-
-La clasificación de los átomos se basa en **comparar la cantidad de protones y electrones**.
-Los **protones (p⁺)** tienen carga positiva y están en el **nucleo**, mientras que los **electrones (e⁻)** tienen carga negativa y se encuentran en la **periferia** del átomo.
+Los átomos pueden clasificarse **según su carga** en **neutro** o **iones**.
 
 ---
 
@@ -63,3 +60,7 @@ Un átomo puede **ganar o perder electrones** con facilidad, formando iones.
 Sin embargo, **ganar o perder protones** ocurre solo en **reacciones nucleares**, que no son comunes en la vida cotidiana.
 
 ---
+
+https://youtu.be/ruLNzfexcJs
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJPmqD9/)

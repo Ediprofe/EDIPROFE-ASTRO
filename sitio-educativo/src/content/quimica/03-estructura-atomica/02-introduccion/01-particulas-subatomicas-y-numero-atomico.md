@@ -67,6 +67,12 @@ Gracias a ella es posible **identificar el elemento** únicamente conociendo su 
 
 ---
 
+https://youtu.be/efOK-ZVm0NI
+
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJPBDcg/)
+
+--- 
+
 ## **Completa la tabla**
 
 Para reforzar el concepto de **número atómico (Z)**, observa los átomos de la tabla y **rellena la columna que falta**.
@@ -79,6 +85,7 @@ Recuerda: **Z es igual al número de protones** del átomo.
 | Átomo 3 | 88                 |                    | Radio                     |
 | Átomo 4 | 82                 |                    | Plomo                     |
 
+---
+https://youtu.be/JN-802f841Y
 
-
-
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJPDnqf/)

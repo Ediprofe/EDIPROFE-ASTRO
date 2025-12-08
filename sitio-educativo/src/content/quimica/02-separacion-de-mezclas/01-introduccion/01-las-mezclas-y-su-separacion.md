@@ -27,3 +27,5 @@ A diferencia de las **sustancias puras**, que tienen un solo componente, las mez
 
 Los métodos de separación permiten **aislar los componentes de una mezcla** mediante **procesos físicos**, lo que significa que **las sustancias no se modifican químicamente**.
 Cada método aprovecha diferencias en propiedades como el tamaño de partícula, densidad, solubilidad o punto de ebullición.
+
+https://youtu.be/T--EeLCHf9M
