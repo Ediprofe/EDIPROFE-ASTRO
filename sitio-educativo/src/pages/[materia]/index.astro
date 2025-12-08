@@ -84,7 +84,7 @@ const grouped = groupLessonsByCapituloAndTema(lessons);
 const totalTemas = Object.values(grouped).reduce((acc, temas) => acc + Object.keys(temas).length, 0);
 ---
 
-<BaseLayout title={materiaName}>
+<BaseLayout title={materiaName} showTopBar={false}>
   <StickyHeader 
     showBreadcrumb={true}
     breadcrumbItems={[
@@ -107,19 +107,6 @@ const totalTemas = Object.values(grouped).reduce((acc, temas) => acc + Object.ke
         </div>
         
         <div class="header-content">
-          <div class="header-top">
-            <a href="/" class="back-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-              </svg>
-              <span>Volver al inicio</span>
-            </a>
-            <div class="header-badge">
-              <span class="badge-dot" style={`background: ${config.color}`}></span>
-              <span>{lessons.length} {lessons.length === 1 ? 'lección' : 'lecciones'}</span>
-            </div>
-          </div>
-          
           <div class="header-main">
             <div class="header-icon-wrapper" style={`background: ${config.gradient}`}>
               <span class="header-icon">{icon}</span>

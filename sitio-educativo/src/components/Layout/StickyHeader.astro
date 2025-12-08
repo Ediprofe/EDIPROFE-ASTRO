@@ -1,8 +1,8 @@
 ---
 /**
  * Header fijo para páginas internas
- * Contiene: Logo + ThemeToggle + Menú hamburguesa
- * No se usa en la página principal (index)
+ * - Móvil: Logo + ThemeToggle + Menú hamburguesa + Breadcrumb
+ * - Desktop: Solo Breadcrumb + ThemeToggle (logo está en sidebar)
  */
 import ThemeToggle from '../UI/ThemeToggle.astro';
 
@@ -15,7 +15,8 @@ const { showBreadcrumb = false, breadcrumbItems = [] } = Astro.props;
 ---
 
 <header class="sticky-header">
-  <div class="sticky-header-content">
+  <!-- Barra superior móvil (logo + acciones) -->
+  <div class="sticky-header-mobile">
     <a href="/" class="sticky-logo">
       <span class="sticky-logo-icon">🎓</span>
       <span class="sticky-logo-text">Ediprofe</span>
@@ -31,24 +32,30 @@ const { showBreadcrumb = false, breadcrumbItems = [] } = Astro.props;
     </div>
   </div>
   
+  <!-- Barra de breadcrumb (siempre visible) -->
   {showBreadcrumb && breadcrumbItems.length > 0 && (
     <nav class="sticky-breadcrumb" aria-label="Navegación">
-      {breadcrumbItems.map((item, index) => (
-        <>
-          {index > 0 && <span class="breadcrumb-sep">/</span>}
-          {item.href ? (
-            <a href={item.href} class="breadcrumb-item">
-              {item.icon && <span class="breadcrumb-icon">{item.icon}</span>}
-              <span>{item.label}</span>
-            </a>
-          ) : (
-            <span class="breadcrumb-item breadcrumb-current">
-              {item.icon && <span class="breadcrumb-icon">{item.icon}</span>}
-              <span>{item.label}</span>
-            </span>
-          )}
-        </>
-      ))}
+      <div class="breadcrumb-content">
+        {breadcrumbItems.map((item, index) => (
+          <>
+            {index > 0 && <span class="breadcrumb-sep">/</span>}
+            {item.href ? (
+              <a href={item.href} class="breadcrumb-item">
+                {item.icon && <span class="breadcrumb-icon">{item.icon}</span>}
+                <span>{item.label}</span>
+              </a>
+            ) : (
+              <span class="breadcrumb-item breadcrumb-current">
+                {item.icon && <span class="breadcrumb-icon">{item.icon}</span>}
+                <span>{item.label}</span>
+              </span>
+            )}
+          </>
+        ))}
+      </div>
+      <div class="breadcrumb-actions">
+        <ThemeToggle />
+      </div>
     </nav>
   )}
 </header>
@@ -81,13 +88,12 @@ const { showBreadcrumb = false, breadcrumbItems = [] } = Astro.props;
     border-bottom-color: rgba(255,255,255,0.06);
   }
 
-  .sticky-header-content {
+  /* Barra móvil con logo */
+  .sticky-header-mobile {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem 1rem;
-    max-width: 1400px;
-    margin: 0 auto;
   }
 
   .sticky-logo {
@@ -152,22 +158,35 @@ const { showBreadcrumb = false, breadcrumbItems = [] } = Astro.props;
   .sticky-breadcrumb {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
     padding: 0.5rem 1rem;
     background: var(--bg-primary);
     border-top: 1px solid var(--border-color, rgba(0,0,0,0.04));
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .sticky-breadcrumb::-webkit-scrollbar {
-    display: none;
   }
 
   :global(html.dark) .sticky-breadcrumb {
     background: rgba(0,0,0,0.2);
     border-top-color: rgba(255,255,255,0.04);
+  }
+
+  .breadcrumb-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex: 1;
+  }
+
+  .breadcrumb-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  .breadcrumb-actions {
+    display: none;
+    margin-left: 1rem;
+    flex-shrink: 0;
   }
 
   .breadcrumb-item {
@@ -201,10 +220,31 @@ const { showBreadcrumb = false, breadcrumbItems = [] } = Astro.props;
     font-size: 0.75rem;
   }
 
-  /* Ocultar en desktop - solo mostrar en móvil/tablet */
+  /* Desktop: ocultar barra móvil, mostrar solo breadcrumb */
   @media (min-width: 1025px) {
     .sticky-header {
+      left: 280px;
+    }
+
+    .sticky-header-mobile {
       display: none;
+    }
+
+    .sticky-breadcrumb {
+      padding: 0.75rem 1.5rem;
+      border-top: none;
+    }
+
+    .breadcrumb-actions {
+      display: flex;
+    }
+  }
+
+  /* Cuando el sidebar está colapsado */
+  @media (min-width: 1025px) {
+    :global(.sidebar-collapsed) ~ .sticky-header,
+    :global(body:has(.sidebar-collapsed)) .sticky-header {
+      left: 64px;
     }
   }
 </style>

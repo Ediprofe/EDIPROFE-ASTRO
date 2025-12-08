@@ -23,7 +23,7 @@ const heroStats = [
 ];
 ---
 
-<BaseLayout title="Inicio">
+<BaseLayout title="Inicio" showTopBar={false}>
   <div class="home-container">
     <Header />
 
@@ -31,7 +31,7 @@ const heroStats = [
       title="Guía Educativa para"
       highlightedText="Ciencias y Matemáticas"
       subtitle="Contenido estructurado con videos explicativos, ejercicios prácticos y recursos descargables. Aprende a tu ritmo con lecciones diseñadas para maximizar tu comprensión."
-      showSocial={true}
+      showSocial={false}
       showStats={true}
       stats={heroStats}
       primaryCta={{ text: "Comenzar Ahora", href: "#materias" }}

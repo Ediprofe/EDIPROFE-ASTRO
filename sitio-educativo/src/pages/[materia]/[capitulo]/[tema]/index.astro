@@ -80,12 +80,13 @@ const temasDelCapitulo = getUniqueTemas(allLessons, capitulo);
 const temaIndex = temasDelCapitulo.indexOf(tema);
 ---
 
-<BaseLayout title={`${temaName} - ${capituloName} - ${materiaName}`}>
+<BaseLayout title={`${temaName} - ${capituloName} - ${materiaName}`} showTopBar={false}>
   <StickyHeader 
     showBreadcrumb={true}
     breadcrumbItems={[
       { label: 'Inicio', href: '/', icon: '🏠' },
       { label: materiaName, href: `/${materia}`, icon: config.icon },
+      { label: capituloName, href: `/${materia}/${cleanCapitulo}` },
       { label: temaName }
     ]}
   />
@@ -104,15 +105,6 @@ const temaIndex = temasDelCapitulo.indexOf(tema);
         </div>
         
         <div class="header-content">
-          <div class="header-top">
-            <a href={`/${materia}/${cleanCapitulo}`} class="back-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-              </svg>
-              <span>Volver a {capituloName}</span>
-            </a>
-          </div>
-          
           <div class="header-main">
             <div class="header-icon-wrapper" style={`background: ${config.gradient}`}>
               <span class="header-icon">{config.icon}</span>

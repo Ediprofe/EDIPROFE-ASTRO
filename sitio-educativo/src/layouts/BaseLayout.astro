@@ -8,6 +8,7 @@ interface Props {
   type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
+  showTopBar?: boolean;
 }
 
 const { 
@@ -16,7 +17,8 @@ const {
   image = '/og-image.svg',
   type = 'website',
   publishedTime,
-  modifiedTime
+  modifiedTime,
+  showTopBar = true
 } = Astro.props;
 
 const siteTitle = 'Ediprofe';
@@ -119,7 +121,7 @@ const structuredData = {
   
   </head>
 <body>
-  <TopBar />
+  {showTopBar && <TopBar />}
   <slot />
 </body>
 </html>

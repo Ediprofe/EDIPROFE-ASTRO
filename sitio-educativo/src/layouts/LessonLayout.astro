@@ -48,13 +48,15 @@ const cleanUnidad = cleanSegment(unidad);
 const cleanBloque = cleanSegment(bloque);
 ---
 
-<BaseLayout title={title} description={frontmatter.description}>
+<BaseLayout title={title} description={frontmatter.description} showTopBar={false}>
   <StickyHeader 
     showBreadcrumb={true}
     breadcrumbItems={[
       { label: 'Inicio', href: '/', icon: '🏠' },
       { label: materiaName, href: `/${materia}`, icon: config.icon },
-      { label: bloqueName }
+      { label: unidadName, href: `/${materia}/${cleanUnidad}` },
+      { label: bloqueName, href: `/${materia}/${cleanUnidad}/${cleanBloque}` },
+      { label: title }
     ]}
   />
   <MobileMenu currentPath={url} />
@@ -72,15 +74,6 @@ const cleanBloque = cleanSegment(bloque);
         </div>
         
         <div class="header-content">
-          <div class="header-top">
-            <a href={`/${materia}/${cleanUnidad}/${cleanBloque}`} class="back-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-              </svg>
-              <span>Volver a {bloqueName}</span>
-            </a>
-          </div>
-          
           <div class="header-main">
             <div class="header-icon-wrapper" style={`background: ${config.gradient}`}>
               <span class="header-icon">📖</span>
