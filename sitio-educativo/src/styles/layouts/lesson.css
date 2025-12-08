@@ -319,7 +319,7 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 2rem 0;
-  max-width: 100%;
+  width: 100%;
   /* Evitar que el scroll afecte el layout de la página */
   overscroll-behavior-x: contain;
 }
@@ -350,11 +350,11 @@
 :global(.content-body table) {
   border-collapse: separate;
   border-spacing: 0;
-  margin: 2.5rem auto;
+  margin: 2rem 0;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  min-width: 50%;
+  width: 100%;
   border: 1px solid var(--border-color, #e2e8f0);
 }
 
@@ -364,13 +364,27 @@
 }
 
 :global(.content-body th) {
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  background: var(--table-header-bg, linear-gradient(135deg, #1d4ed8, #2563eb));
   color: white;
   padding: 0.875rem 1rem;
   text-align: center;
   font-weight: 600;
   font-size: 0.8125rem;
   letter-spacing: 0.01em;
+}
+
+/* Colores de tabla por materia - SINCRONIZAR con src/config/materias.ts */
+:global(.content-article-matematicas) {
+  --table-header-bg: linear-gradient(135deg, #ef4444, #dc2626);
+}
+:global(.content-article-fisica) {
+  --table-header-bg: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+:global(.content-article-quimica) {
+  --table-header-bg: linear-gradient(135deg, #f97316, #ea580c);
+}
+:global(.content-article-ciencias) {
+  --table-header-bg: linear-gradient(135deg, #22c55e, #16a34a);
 }
 
 :global(.content-body th:first-child) {
@@ -411,7 +425,21 @@
 }
 
 :global(.content-body tr:hover td) {
-  background: rgba(37, 99, 235, 0.06);
+  background: var(--table-hover-bg, rgba(37, 99, 235, 0.06));
+}
+
+/* Hover de tabla por materia */
+:global(.content-article-matematicas .content-body tr:hover td) {
+  --table-hover-bg: rgba(239, 68, 68, 0.08);
+}
+:global(.content-article-fisica .content-body tr:hover td) {
+  --table-hover-bg: rgba(59, 130, 246, 0.08);
+}
+:global(.content-article-quimica .content-body tr:hover td) {
+  --table-hover-bg: rgba(249, 115, 22, 0.08);
+}
+:global(.content-article-ciencias .content-body tr:hover td) {
+  --table-hover-bg: rgba(34, 197, 94, 0.08);
 }
 
 /* Videos responsivos */
