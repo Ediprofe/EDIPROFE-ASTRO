@@ -5,7 +5,7 @@ import MobileMenu from '../../components/Navigation/MobileMenu.astro';
 import CollapsibleSidebar from '../../components/Navigation/CollapsibleSidebar.astro';
 import StickyHeader from '../../components/Layout/StickyHeader.astro';
 import { formatName, formatBlockName, cleanSegment, cleanSlug } from '../../utils/navigation-generator.js';
-import { getMateriaName } from '../../config/materias';
+import { getMateriaConfig, getMateriaName } from '../../config/materias';
 import { getMetaName as getMetaNameFromStore } from '../../utils/load-meta';
 import { getLessonsByMateria, groupLessonsByCapituloAndTema } from '../../utils/content-helpers';
 import { MATERIA_SLUGS, type MateriaSlug } from '../../types/content';
@@ -39,42 +39,7 @@ const getMetaName = (unidadSlug: string, bloqueSlug?: string): string => {
   return getMetaNameFromStore(key, fallback);
 };
 
-const materiaConfig: Record<string, { icon: string; color: string; gradient: string; lightBg: string; sidebarIcon: string; sidebarColor: string }> = {
-  matematicas: { 
-    icon: '🧮', 
-    color: '#ef4444',
-    gradient: 'linear-gradient(135deg, #ef4444, #dc2626)',
-    lightBg: 'rgba(239, 68, 68, 0.1)',
-    sidebarIcon: '📝',
-    sidebarColor: '#dc2626'
-  },
-  fisica: { 
-    icon: '🚀', 
-    color: '#3b82f6',
-    gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)',
-    lightBg: 'rgba(59, 130, 246, 0.1)',
-    sidebarIcon: '⚡️',
-    sidebarColor: '#2563eb'
-  },
-  quimica: { 
-    icon: '🧪', 
-    color: '#ea580c',
-    gradient: 'linear-gradient(135deg, #f97316, #ea580c)',
-    lightBg: 'rgba(249, 115, 22, 0.1)',
-    sidebarIcon: '🧪',
-    sidebarColor: '#ea580c'
-  },
-  ciencias: { 
-    icon: '🌍', 
-    color: '#22c55e',
-    gradient: 'linear-gradient(135deg, #22c55e, #16a34a)',
-    lightBg: 'rgba(34, 197, 94, 0.1)',
-    sidebarIcon: '🌿',
-    sidebarColor: '#16a34a'
-  },
-};
-
-const config = materiaConfig[materia] ?? materiaConfig.fisica;
+const config = getMateriaConfig(materia);
 const icon = config.icon;
 
 // Agrupar por unidad y bloque usando helper tipado

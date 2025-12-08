@@ -2,6 +2,13 @@
  * Configuración centralizada de materias
  * Este archivo contiene toda la información de configuración de las materias
  * para evitar duplicación de código en múltiples archivos.
+ * 
+ * IMPORTANTE: Si cambias colores aquí, también actualiza los gradientes de fondo
+ * en los archivos CSS que tienen el comentario "SINCRONIZAR con src/config/materias.ts":
+ * - src/styles/layouts/lesson.css
+ * - src/styles/pages/materia.css
+ * - src/styles/pages/capitulo.css
+ * - src/styles/pages/tema.css
  */
 
 export interface MateriaConfig {

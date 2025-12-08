@@ -1,4 +1,6 @@
 ---
+import { getMateriaConfig, getMateriaName } from '../../config/materias';
+
 interface Props {
   title: string;
   description?: string;
@@ -8,37 +10,8 @@ interface Props {
 }
 
 const { title, description, href, materia, order } = Astro.props;
-
-const materiaConfig: Record<string, { icon: string; color: string; gradient: string }> = {
-  matematicas: { 
-    icon: '🧮', 
-    color: '#ef4444',
-    gradient: 'linear-gradient(135deg, #ef4444, #dc2626)'
-  },
-  fisica: { 
-    icon: '🚀', 
-    color: '#3b82f6',
-    gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)'
-  },
-  quimica: { 
-    icon: '🧪', 
-    color: '#ea580c',
-    gradient: 'linear-gradient(135deg, #f97316, #ea580c)'
-  },
-  ciencias: { 
-    icon: '🌍', 
-    color: '#22c55e',
-    gradient: 'linear-gradient(135deg, #22c55e, #16a34a)'
-  },
-  default: { 
-    icon: '📚', 
-    color: '#3b82f6',
-    gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)'
-  }
-};
-
-const config = materia ? (materiaConfig[materia] || materiaConfig.default) : materiaConfig.default;
-const materiaName = materia ? materia.charAt(0).toUpperCase() + materia.slice(1) : '';
+const config = getMateriaConfig(materia || 'fisica');
+const materiaName = materia ? getMateriaName(materia) : '';
 ---
 
 <a href={href} class={`lesson-card lesson-card-${materia || 'default'}`}>

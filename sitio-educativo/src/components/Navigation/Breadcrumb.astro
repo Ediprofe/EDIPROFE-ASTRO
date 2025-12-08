@@ -1,14 +1,7 @@
 ---
 import { formatName, formatBlockName } from '../../utils/navigation-generator.js';
 import { allMeta } from '../../utils/load-meta.js';
-
-// Configuración de materias (consistente con sidebar)
-const materiaConfig: Record<string, { icon: string; color: string }> = {
-  matematicas: { icon: '🧮', color: '#ef4444' },
-  fisica: { icon: '🚀', color: '#3b82f6' },
-  quimica: { icon: '🧪', color: '#ea580c' },
-  ciencias: { icon: '🌍', color: '#22c55e' }
-};
+import { getMateriaConfig } from '../../config/materias';
 
 interface Props {
   materia: string;
@@ -17,7 +10,7 @@ interface Props {
 }
 
 const { materia, unidad, bloque } = Astro.props;
-const config = materiaConfig[materia] || { icon: '📚', color: '#6b7280' };
+const config = getMateriaConfig(materia);
 
 // Obtener nombres con tildes desde metadatos
 const capituloKey = `${materia}/${unidad}`;

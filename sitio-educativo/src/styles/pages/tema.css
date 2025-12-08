@@ -29,7 +29,12 @@
   overflow: hidden;
 }
 
-/* Colores por materia */
+/* Colores por materia - SINCRONIZAR con src/config/materias.ts
+   matematicas: #ef4444 / #dc2626
+   fisica: #3b82f6 / #2563eb
+   quimica: #f97316 / #ea580c
+   ciencias: #22c55e / #16a34a
+*/
 .page-header-matematicas {
   background: linear-gradient(135deg, #0a0f1a 0%, #1f1315 30%, #7f1d1d 70%, #dc2626 100%);
 }
