@@ -21,10 +21,10 @@ import ThemeToggle from '../UI/ThemeToggle.astro';
     gap: 0.5rem;
   }
 
-  @media (max-width: 768px) {
+  /* Ocultar en móvil/tablet cuando hay sticky-header */
+  @media (max-width: 1024px) {
     .top-bar {
-      top: 0.75rem;
-      right: 0.75rem;
+      display: none;
     }
   }
 </style>

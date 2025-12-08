@@ -1,0 +1,210 @@
+---
+/**
+ * Header fijo para páginas internas
+ * Contiene: Logo + ThemeToggle + Menú hamburguesa
+ * No se usa en la página principal (index)
+ */
+import ThemeToggle from '../UI/ThemeToggle.astro';
+
+interface Props {
+  showBreadcrumb?: boolean;
+  breadcrumbItems?: Array<{ label: string; href?: string; icon?: string }>;
+}
+
+const { showBreadcrumb = false, breadcrumbItems = [] } = Astro.props;
+---
+
+<header class="sticky-header">
+  <div class="sticky-header-content">
+    <a href="/" class="sticky-logo">
+      <span class="sticky-logo-icon">🎓</span>
+      <span class="sticky-logo-text">Ediprofe</span>
+    </a>
+    
+    <div class="sticky-header-actions">
+      <ThemeToggle />
+      <button class="sticky-menu-btn" id="sticky-menu-btn" aria-label="Abrir menú">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  {showBreadcrumb && breadcrumbItems.length > 0 && (
+    <nav class="sticky-breadcrumb" aria-label="Navegación">
+      {breadcrumbItems.map((item, index) => (
+        <>
+          {index > 0 && <span class="breadcrumb-sep">/</span>}
+          {item.href ? (
+            <a href={item.href} class="breadcrumb-item">
+              {item.icon && <span class="breadcrumb-icon">{item.icon}</span>}
+              <span>{item.label}</span>
+            </a>
+          ) : (
+            <span class="breadcrumb-item breadcrumb-current">
+              {item.icon && <span class="breadcrumb-icon">{item.icon}</span>}
+              <span>{item.label}</span>
+            </span>
+          )}
+        </>
+      ))}
+    </nav>
+  )}
+</header>
+
+<script>
+  // Conectar con el menú móvil existente
+  const stickyBtn = document.getElementById('sticky-menu-btn');
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  
+  stickyBtn?.addEventListener('click', () => {
+    // Simular click en el botón del menú móvil existente
+    mobileToggle?.click();
+  });
+</script>
+
+<style>
+  .sticky-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color, rgba(0,0,0,0.06));
+    backdrop-filter: blur(12px);
+  }
+
+  :global(html.dark) .sticky-header {
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom-color: rgba(255,255,255,0.06);
+  }
+
+  .sticky-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .sticky-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+
+  .sticky-logo:hover {
+    text-decoration: none;
+  }
+
+  .sticky-logo-icon {
+    font-size: 1.375rem;
+  }
+
+  .sticky-logo-text {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .sticky-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sticky-menu-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color, rgba(0,0,0,0.08));
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: all 0.2s;
+  }
+
+  .sticky-menu-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  :global(html.dark) .sticky-menu-btn {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  :global(html.dark) .sticky-menu-btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  /* Breadcrumb */
+  .sticky-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color, rgba(0,0,0,0.04));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sticky-breadcrumb::-webkit-scrollbar {
+    display: none;
+  }
+
+  :global(html.dark) .sticky-breadcrumb {
+    background: rgba(0,0,0,0.2);
+    border-top-color: rgba(255,255,255,0.04);
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s;
+  }
+
+  a.breadcrumb-item:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .breadcrumb-current {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .breadcrumb-icon {
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb-sep {
+    color: var(--text-secondary);
+    opacity: 0.5;
+    font-size: 0.75rem;
+  }
+
+  /* Ocultar en desktop - solo mostrar en móvil/tablet */
+  @media (min-width: 1025px) {
+    .sticky-header {
+      display: none;
+    }
+  }
+</style>

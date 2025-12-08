@@ -654,7 +654,7 @@
   }
 
   .lesson-content {
-    padding: 4.5rem 1.5rem 1.5rem;
+    padding: 7rem 1.5rem 1.5rem;
   }
 
   .content-article {
@@ -665,7 +665,7 @@
 
 @media (max-width: 768px) {
   .lesson-content {
-    padding: 4rem 1rem 1rem;
+    padding: 7rem 1rem 1rem;
   }
 
   .lesson-header {
@@ -775,7 +775,7 @@
 
 @media (max-width: 480px) {
   .lesson-content {
-    padding: 3.5rem 0.75rem 0.75rem;
+    padding: 6.5rem 0.75rem 0.75rem;
   }
 
   .content-article {

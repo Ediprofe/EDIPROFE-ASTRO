@@ -5,6 +5,7 @@ import { formatName, formatBlockName, cleanSegment } from '../../../utils/naviga
 import { getMetaName as getMetaNameFromStore } from '../../../utils/load-meta';
 import CollapsibleSidebar from '../../../components/Navigation/CollapsibleSidebar.astro';
 import MobileMenu from '../../../components/Navigation/MobileMenu.astro';
+import StickyHeader from '../../../components/Layout/StickyHeader.astro';
 import { 
   getLessonsByMateria, 
   filterLessonsByPath, 
@@ -83,6 +84,14 @@ const totalLecciones = Object.values(temas).reduce((acc, arr) => acc + arr.lengt
 ---
 
 <BaseLayout title={`${capituloName} - ${materiaName}`}>
+  <StickyHeader 
+    showBreadcrumb={true}
+    breadcrumbItems={[
+      { label: 'Inicio', href: '/', icon: '🏠' },
+      { label: materiaName, href: `/${materia}`, icon: config.icon },
+      { label: capituloName }
+    ]}
+  />
   <MobileMenu currentPath={Astro.url.pathname} />
   
   <div class="page-container">

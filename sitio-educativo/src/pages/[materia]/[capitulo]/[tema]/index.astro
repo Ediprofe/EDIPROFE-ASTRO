@@ -5,6 +5,7 @@ import { formatName, formatBlockName, extractTitleFromContent, cleanSegment, cle
 import { getMetaName as getMetaNameFromStore } from '../../../../utils/load-meta';
 import CollapsibleSidebar from '../../../../components/Navigation/CollapsibleSidebar.astro';
 import MobileMenu from '../../../../components/Navigation/MobileMenu.astro';
+import StickyHeader from '../../../../components/Layout/StickyHeader.astro';
 import { 
   getLessonsByMateria, 
   filterLessonsByPath,
@@ -80,6 +81,14 @@ const temaIndex = temasDelCapitulo.indexOf(tema);
 ---
 
 <BaseLayout title={`${temaName} - ${capituloName} - ${materiaName}`}>
+  <StickyHeader 
+    showBreadcrumb={true}
+    breadcrumbItems={[
+      { label: 'Inicio', href: '/', icon: '🏠' },
+      { label: materiaName, href: `/${materia}`, icon: config.icon },
+      { label: temaName }
+    ]}
+  />
   <MobileMenu currentPath={Astro.url.pathname} />
   
   <div class="page-container">

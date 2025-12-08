@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Footer from '../../components/Layout/Footer.astro';
 import MobileMenu from '../../components/Navigation/MobileMenu.astro';
 import CollapsibleSidebar from '../../components/Navigation/CollapsibleSidebar.astro';
+import StickyHeader from '../../components/Layout/StickyHeader.astro';
 import { formatName, formatBlockName, cleanSegment, cleanSlug } from '../../utils/navigation-generator.js';
 import { getMateriaName } from '../../config/materias';
 import { getMetaName as getMetaNameFromStore } from '../../utils/load-meta';
@@ -84,6 +85,13 @@ const totalTemas = Object.values(grouped).reduce((acc, temas) => acc + Object.ke
 ---
 
 <BaseLayout title={materiaName}>
+  <StickyHeader 
+    showBreadcrumb={true}
+    breadcrumbItems={[
+      { label: 'Inicio', href: '/', icon: '🏠' },
+      { label: materiaName, icon: config.icon }
+    ]}
+  />
   <MobileMenu currentPath={`/${materia}`} />
   
   <div class="page-container">
