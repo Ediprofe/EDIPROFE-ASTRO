@@ -1,7 +1,9 @@
 
-# Completa la siguiente tabla
+# Completa la tabla
 
-Completa la siguiente tabla con ayuda de la tabla periódica
+## Completa la tabla
+
+Con ayuda de la tabla periódica, completa la siguiente tabla:
 | Notación atómica           | Z  | n  | A   | Carga | e⁻  |
 | -------------------------- | -- | -- | --- | ----- | --- |
 |                            | 6  |    | 14  | 0     |     |

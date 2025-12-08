@@ -47,4 +47,4 @@ Si el **alcohol arrastra más rápido el color azul**, significa que:
 
 https://youtu.be/IOPG9Qflci0
 
-[Ver en Tiktok](Ver en Tiktok)
+[Ver en Tiktok](https://vt.tiktok.com/ZSBJDXFQm/)

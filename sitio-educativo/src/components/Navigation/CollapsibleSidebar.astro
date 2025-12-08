@@ -53,7 +53,8 @@ const filteredNavigation = Object.fromEntries(
 );
 
 // Determinar qué secciones deben estar abiertas basándose en la ruta actual
-const pathParts = currentPath.split('/').filter(Boolean);
+// Decodificar para manejar caracteres especiales como tildes en URLs
+const pathParts = currentPath.split('/').filter(Boolean).map(part => decodeURIComponent(part));
 const currentMateria = pathParts[0] || '';
 const currentUnidad = pathParts[1] || '';
 const currentBloque = pathParts[2] || '';
