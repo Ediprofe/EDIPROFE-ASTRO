@@ -1,5 +1,17 @@
-ya con eso en cuenta, QUIERO QUE EL CAPITULO Y EL TEMA SE MUESTREN SOLO SI EXISTE EL ARCHIVO _meta.json EN EL DIRECTORIO RESPECTIVO CON EL CAMPO "name" DEFINIDO CORRECTAMENTE.
+No se puede acceder a este sitio
+Se ha restablecido la conexión.
+Intenta:
 
-DE OTRO LADO, QUIERO QUE LA LECCIÓN SE TENGA EN CUENTA SOLO SI EXISTE EL RESPECTIVO ARCHIVO .MD Y ESTE ARCHIVO TIENE AL MENOS UN TÍTULO H1.
+Comprobar la conexión.
+Comprobar el proxy y el firewall.
+ERR_CONNECTION_RESET
 
-TRABAJA EN ESTA LÓGICA, QUE YA FUNCIONA, PERO QUIERO QUE LA PULAS, Y HAGAS MÁS EFECTIVA, HACIENDOLA MÁS SIMPLE Y EFECTIVA
+
+![alt text](image-3.png)
+el deployment aparentemente correcto.
+![alt text](image-4.png)
+
+pero veo este mensaje
+![alt text](image-5.png)
+
+![alt text](image-6.png)

@@ -1,6 +1,0 @@
-{
-  "version": 2,
-  "framework": "astro",
-  "buildCommand": "cd sitio-educativo && npm install && npm run build",
-  "outputDirectory": "sitio-educativo/dist"
-}
