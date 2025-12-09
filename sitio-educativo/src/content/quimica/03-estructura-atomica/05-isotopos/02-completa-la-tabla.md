@@ -15,6 +15,8 @@ Con ayuda de la tabla periódica, completa la siguiente tabla:
 
 ---
 
+## Solución
+
 https://youtu.be/z1rPv4uQvnY
 
 [Ver en Tiktok](https://vt.tiktok.com/ZSBJPyTM4/)

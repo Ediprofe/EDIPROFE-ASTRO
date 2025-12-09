@@ -5,7 +5,7 @@
 
 import { getCollection } from 'astro:content';
 import { buildNavigationFromLessonsWithCollection, mergeNavigations } from './navigation-generator.js';
-import { allMeta } from './load-meta.js';
+import { allMeta, isValidLesson } from './load-meta.js';
 import { MATERIAS_SLUGS, type MateriaSlug } from '../config/materias';
 
 export interface LessonWithMateria {
@@ -25,6 +25,7 @@ export interface MateriaInfo {
 
 /**
  * Obtiene todas las lecciones de todas las materias
+ * Solo incluye lecciones válidas (con H1 y cuyos capítulos/temas tienen name)
  */
 export async function getAllLessons(): Promise<LessonWithMateria[]> {
   const allLessons: LessonWithMateria[] = [];
@@ -33,14 +34,17 @@ export async function getAllLessons(): Promise<LessonWithMateria[]> {
     try {
       const lessons = await getCollection(materia as any);
       lessons.forEach((lesson: any) => {
-        allLessons.push({
-          id: lesson.id,
-          slug: lesson.slug,
-          body: lesson.body,
-          collection: lesson.collection,
-          data: lesson.data,
-          materia
-        });
+        // Solo incluir lecciones válidas
+        if (isValidLesson(lesson, materia)) {
+          allLessons.push({
+            id: lesson.id,
+            slug: lesson.slug,
+            body: lesson.body,
+            collection: lesson.collection,
+            data: lesson.data,
+            materia
+          });
+        }
       });
     } catch (e) {
       // Colección vacía o no existe
@@ -97,10 +101,12 @@ function countLessonsInMateria(materia: any): number {
 
 /**
  * Obtiene lecciones de una materia específica
+ * Solo incluye lecciones válidas (con H1 y cuyos capítulos/temas tienen name)
  */
 export async function getLessonsByMateria(materia: MateriaSlug): Promise<any[]> {
   try {
-    return await getCollection(materia as any);
+    const lessons = await getCollection(materia as any);
+    return lessons.filter((lesson: any) => isValidLesson(lesson, materia));
   } catch (e) {
     return [];
   }

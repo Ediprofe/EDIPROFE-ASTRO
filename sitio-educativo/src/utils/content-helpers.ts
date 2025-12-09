@@ -5,16 +5,19 @@
 import { getCollection } from 'astro:content';
 import type { Lesson, MateriaSlug } from '../types/content';
 import { MATERIA_SLUGS, isMateriaSlug } from '../types/content';
+import { isValidLesson } from './load-meta';
 
 /**
  * Obtiene todas las lecciones de una materia específica
+ * Solo incluye lecciones válidas (con H1 y cuyos capítulos/temas tienen name)
  * @param materia - Slug de la materia
- * @returns Array de lecciones tipadas
+ * @returns Array de lecciones tipadas filtradas
  */
 export async function getLessonsByMateria(materia: MateriaSlug): Promise<Lesson[]> {
   try {
     const lessons = await getCollection(materia);
-    return lessons as Lesson[];
+    // Filtrar solo lecciones válidas
+    return (lessons as any[]).filter(lesson => isValidLesson(lesson, materia)) as Lesson[];
   } catch {
     return [];
   }

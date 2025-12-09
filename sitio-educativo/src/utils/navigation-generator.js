@@ -90,25 +90,53 @@ const MATERIA_NAMES = {
   ciencias: 'Ciencias'
 };
 
+/**
+ * Verifica si un metadato tiene el campo 'name' definido (no vacío)
+ */
+function hasValidMetaName(metaData, key) {
+  const entry = metaData[key];
+  return entry?.name !== undefined && entry.name.trim() !== '';
+}
+
+/**
+ * Verifica si una lección es válida (H1 + capítulo válido + tema válido)
+ */
+function isLessonValid(lesson, collectionName, metaData) {
+  // Verificar H1
+  if (!lesson.body || !/^#\s+.+$/m.test(lesson.body)) return false;
+  
+  const parts = lesson.slug.split('/');
+  if (parts.length < 2) return false;
+  
+  const [unidad, bloque] = parts;
+  const unidadKey = `${collectionName}/${cleanSegment(unidad).toLowerCase()}`;
+  const bloqueKey = `${collectionName}/${cleanSegment(unidad).toLowerCase()}/${cleanSegment(bloque).toLowerCase()}`;
+  
+  return hasValidMetaName(metaData, unidadKey) && hasValidMetaName(metaData, bloqueKey);
+}
+
 export function buildNavigationFromLessonsWithCollection(lessons, collectionName, metaData = {}) {
   const navigation = {};
   
-  // metaData estructura: { "materia/capitulo": { name: "Nombre" }, "materia/capitulo/tema": { name: "Nombre" } }
-  // Las claves en metaData están limpias (sin prefijos numéricos) y en minúsculas
+  const getUnidadKey = (unidadSlug) => `${collectionName}/${cleanSegment(unidadSlug).toLowerCase()}`;
+  const getBloqueKey = (unidadSlug, bloqueSlug) => `${collectionName}/${cleanSegment(unidadSlug).toLowerCase()}/${cleanSegment(bloqueSlug).toLowerCase()}`;
+  
   const getUnidadName = (unidadSlug) => {
-    const cleanKey = `${collectionName}/${cleanSegment(unidadSlug).toLowerCase()}`;
+    const cleanKey = getUnidadKey(unidadSlug);
     return metaData[cleanKey]?.name || formatName(unidadSlug);
   };
   
   const getBloqueName = (unidadSlug, bloqueSlug) => {
-    const cleanKey = `${collectionName}/${cleanSegment(unidadSlug).toLowerCase()}/${cleanSegment(bloqueSlug).toLowerCase()}`;
+    const cleanKey = getBloqueKey(unidadSlug, bloqueSlug);
     return metaData[cleanKey]?.name || formatBlockName(bloqueSlug);
   };
   
   lessons.forEach(lesson => {
     const parts = lesson.slug.split('/');
-    // El slug de Astro es relativo a la colección: unidad/bloque/archivo
     if (parts.length < 3) return;
+    
+    // Validar lección: H1 + capítulo válido + tema válido
+    if (!isLessonValid(lesson, collectionName, metaData)) return;
     
     const [unidad, bloque, archivo] = parts;
     const materia = collectionName;

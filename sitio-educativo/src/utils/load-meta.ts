@@ -71,3 +71,73 @@ export function getMetaDescription(key: string): string | undefined {
 export function hasMetaEntry(key: string): boolean {
   return key in allMeta;
 }
+
+/**
+ * Verifica si un metadato tiene el campo 'name' definido (no vacío)
+ * @param key - Clave del metadato (ej: "fisica/cinematica")
+ */
+export function hasValidMetaName(key: string): boolean {
+  const entry = allMeta[key];
+  return entry?.name !== undefined && entry.name.trim() !== '';
+}
+
+// ============================================
+// FUNCIONES DE VALIDACIÓN CENTRALIZADAS
+// ============================================
+
+/**
+ * Limpia prefijos numéricos de un segmento de ruta
+ * Ej: "02-cinematica" -> "cinematica"
+ */
+export function cleanSegment(segment: string): string {
+  return segment.replace(/^\d+-/, '').toLowerCase();
+}
+
+/**
+ * Verifica si un contenido markdown tiene al menos un título H1
+ */
+export function hasValidH1(content: string | undefined): boolean {
+  if (!content) return false;
+  return /^#\s+.+$/m.test(content);
+}
+
+/**
+ * Verifica si un capítulo es válido (tiene _meta.json con name)
+ * @param materia - Slug de la materia
+ * @param capitulo - Slug del capítulo (puede tener prefijo numérico)
+ */
+export function isValidCapitulo(materia: string, capitulo: string): boolean {
+  const key = `${materia}/${cleanSegment(capitulo)}`;
+  return hasValidMetaName(key);
+}
+
+/**
+ * Verifica si un tema es válido (tiene _meta.json con name)
+ * @param materia - Slug de la materia
+ * @param capitulo - Slug del capítulo
+ * @param tema - Slug del tema (puede tener prefijo numérico)
+ */
+export function isValidTema(materia: string, capitulo: string, tema: string): boolean {
+  const key = `${materia}/${cleanSegment(capitulo)}/${cleanSegment(tema)}`;
+  return hasValidMetaName(key);
+}
+
+/**
+ * Verifica si una lección es válida:
+ * - Tiene al menos un H1
+ * - Su capítulo tiene _meta.json con name
+ * - Su tema tiene _meta.json con name
+ * @param lesson - Objeto de lección con slug/id y body
+ * @param materia - Slug de la materia
+ */
+export function isValidLesson(lesson: { slug?: string; id?: string; body?: string }, materia: string): boolean {
+  const slug = lesson.slug || lesson.id || '';
+  const parts = slug.split('/');
+  if (parts.length < 2) return false;
+  
+  const [capitulo, tema] = parts;
+  
+  return hasValidH1(lesson.body) && 
+         isValidCapitulo(materia, capitulo) && 
+         isValidTema(materia, capitulo, tema);
+}
