@@ -67,7 +67,9 @@ $$
 
 Para determinar la cantidad de neutrones:
 
-**N = A − Z**
+$$
+N = Z - A
+$$
 
 **Ejemplo:**
 Cloro → A = 35, Z = 17
